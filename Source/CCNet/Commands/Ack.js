@@ -8,7 +8,7 @@
  * Library for working with "CashCode" Bill Validator devices from Node.js app.
  */
 
-const CCNet = require('./Constants');
+const CCNet = require('./../Constants');
 const Command = require('./../Command');
 
 /**
@@ -16,6 +16,7 @@ const Command = require('./../Command');
  * 
  * Command to confirm a response correctly received.
  * 
+ * @description CCNet Document 1
  * @version 1.0.0
  */
 class Ack extends Command {
