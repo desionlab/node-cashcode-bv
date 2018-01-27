@@ -38,7 +38,7 @@ class Ack extends Command {
       CCNet.SYNC,
       this.device.adr,
       0x06,
-      0x00
+      this.cmd
     ]);
     return Buffer.concat([
       cmd,
