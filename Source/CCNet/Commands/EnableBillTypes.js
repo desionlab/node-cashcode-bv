@@ -14,8 +14,7 @@ const Command = require('./../Command');
 /**
  * Class EnableBillTypes
  * 
- * Indicates Bill Type enable or disable. 
- * Command is followed by set-up data.
+ * Command to set indicates Bill Type enable or disable.
  * 
  * @description CCNet Document 1
  * @version 1.0.0
@@ -34,23 +33,10 @@ class EnableBillTypes extends Command {
   /**
    * Preparing command to send.
    * 
-   * @param {Array} data 
+   * @param {Array} params 
    */
-  request (data = []) {
-    return this.assemble(new Buffer(data));
-  }
-
-  /**
-   * Processing command response.
-   * 
-   * @param {Buffer} data 
-   */
-  response (data) {
-    if (data[0] == 0) {
-      return true;
-    } else {
-      return false;
-    }
+  request (params = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) {
+    return this.assemble(new Buffer(params));
   }
 
 }
