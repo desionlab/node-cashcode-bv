@@ -1,3 +1,51 @@
+# Windows file.
+# -----------------------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+
+# MicrosoftOffice
+# -----------------------------------------------------------------------------
+*.tmp
+
+# Word temporary
+~$*.doc*
+
+# Excel temporary
+~$*.xls*
+
+# Excel Backup File
+*.xlk
+
+# PowerPoint temporary
+~$*.ppt*
+
+# Visio temporary
+~$*.~vsdx
+
+
+# Visual Studio Code
+# -----------------------------------------------------------------------------
+.history
+
+
+# Node.
+# -----------------------------------------------------------------------------
 # Logs
 logs
 *.log
@@ -56,4 +104,33 @@ typings/
 
 # dotenv environment variables file
 .env
+package-lock.json
 
+
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+# -----------------------------------------------------------------------------
+*.iml
+
+## Directory-based project format:
+.idea/
+# if you remove the above rule, at least ignore the following:
+
+## File-based project format:
+*.ipr
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
