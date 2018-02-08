@@ -472,19 +472,19 @@ class BillValidator extends EventEmitter {
           /* Escrow position. */
           case 0x80:
             /* Fire event. */
-            this.emit('escrow', this.billTable[parseInt(status[1].toString(16))]);
+            this.emit('escrow', this.billTable[parseInt(status[1].toString(10))]);
           break;
 
           /* Bill stacked. */
           case 0x81:
             /* Fire event. */
-            this.emit('stacked', this.billTable[parseInt(status[1].toString(16))]);
+            this.emit('stacked', this.billTable[parseInt(status[1].toString(10))]);
           break;
 
           /* Bill returned. */
           case 0x82:
             /* Fire event. */
-            this.emit('returned', this.billTable[parseInt(status[1].toString(16))]);
+            this.emit('returned', this.billTable[parseInt(status[1].toString(10))]);
           break;
         }
       }
