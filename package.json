@@ -2,6 +2,7 @@
   "name": "cashcode-bv",
   "version": "0.0.2",
   "description": "Library for working with \"CashCode\" Bill Validator devices from Node.js app.",
+  "author": "Desionlab <fenixphp@gmail.com>",
   "main": "Source/index.js",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha Tests/**/*.spec.js"
@@ -10,6 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/Desionlab/node-cashcode-bv.git"
   },
+  "bugs": {
+    "url": "https://github.com/Desionlab/node-cashcode-bv/issues"
+  },
+  "homepage": "https://github.com/Desionlab/node-cashcode-bv#readme",
   "keywords": [
     "nodejs",
     "serialport",
@@ -20,16 +25,14 @@
     "ccnet",
     "bill-validator"
   ],
-  "author": "Desionlab <fenixphp@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Desionlab/node-cashcode-bv/issues"
-  },
-  "homepage": "https://github.com/Desionlab/node-cashcode-bv#readme",
   "dependencies": {
-    "serialport": "latest"
+    "serialport": "^6.2.2"
   },
   "devDependencies": {
-    "mocha": "latest"
-  }
+    "mocha": "^5.2.0"
+  },
+  "engines": {
+    "node": ">= 8.10.0"
+  },
+  "license": "MIT"
 }
