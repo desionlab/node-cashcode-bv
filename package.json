@@ -1,0 +1,37 @@
+{
+  "name": "cashcode-bv",
+  "version": "0.1.0",
+  "description": "Library for working with \"CashCode\" bill validator devices from Node.js app.",
+  "author": "Desionlab <fenixphp@gmail.com>",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "develop": "./node_modules/.bin/tsc --watch",
+    "build": "./node_modules/.bin/tsc && npm run test && npm run docs",
+    "docs": "typedoc --theme minimal --target 'es5' --excludeNotExported --excludePrivate --ignoreCompilerErrors --out ./doc/ ./src/",
+    "test": "node ./node_modules/mocha/bin/mocha --require ts-node/register  test/**/*.spec.ts",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/desionlab/node-cashcode-bv.git"
+  },
+  "bugs": {
+    "url": "https://github.com/desionlab/node-cashcode-bv/issues"
+  },
+  "homepage": "https://github.com/desionlab/node-cashcode-bv#readme",
+  "dependencies": {
+    "serialport": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.4",
+    "@types/node": "^10.5.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "typedoc": "^0.12.0",
+    "typescript": "^3.0.3"
+  },
+  "license": "MIT"
+}
