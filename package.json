@@ -3,12 +3,22 @@
   "version": "0.1.0",
   "description": "Library for working with \"CashCode\" bill validator devices from Node.js app.",
   "author": "Desionlab <fenixphp@gmail.com>",
+  "keywords": [
+    "nodejs",
+    "serialport",
+    "promise",
+    "hardware",
+    "electron",
+    "cashcode",
+    "ccnet",
+    "bill-validator"
+  ],
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "develop": "./node_modules/.bin/tsc --watch",
     "build": "./node_modules/.bin/tsc && npm run test && npm run docs",
-    "docs": "typedoc --theme minimal --target 'es5' --excludeNotExported --excludePrivate --ignoreCompilerErrors --out ./doc/ ./src/",
+    "docs": "typedoc --theme minimal --target 'esnext' --excludeNotExported --excludePrivate --ignoreCompilerErrors --out ./doc/ ./src/",
     "test": "node ./node_modules/mocha/bin/mocha --require ts-node/register  test/**/*.spec.ts",
     "prepublish": "npm run build"
   },
