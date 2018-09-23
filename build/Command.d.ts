@@ -1,9 +1,7 @@
 /**
- * index.ts
+ * Command.ts
  *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2018 Desionlab
  * @license   MIT
  */
-import * as CCNet from './Const/CCNet';
-export { CCNet };

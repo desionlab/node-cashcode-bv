@@ -6,6 +6,7 @@
  * @license   MIT
  */
 
-
+import * as CCNet from './Const/CCNet';
+export { CCNet };
 
 /* End of file index.ts */
