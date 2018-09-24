@@ -36,7 +36,7 @@ export class Device extends EventEmitter {
    * @param baudRate Serialport baud rate.
    * @param debug Printing debug info.
    */
-  constructor (
+  public constructor (
     port: string, 
     baudRate: DeviceBaudRate = DeviceBaudRate.DBR9600, 
     debug:boolean = false
@@ -63,6 +63,11 @@ export class Device extends EventEmitter {
    * 
    */
   public async getInfo () {}
+
+  /**
+   * 
+   */
+  public async getBillTable () {}
 
   /**
    * 
