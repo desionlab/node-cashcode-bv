@@ -7,6 +7,8 @@
  */
 
 import * as CCNet from './Const/CCNet';
+
 export { CCNet };
+export * from './Device';
 
 /* End of file index.ts */
