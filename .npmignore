@@ -1,1 +1,21 @@
+
+# Git and GitHub.
+.git/
+.github/
+.gitattributes
+
+# Npm.
+node_modules/
+npm-shrinkwrap.json
+
+# Tests.
+test/
+
+# Editor settings.
+.vscode/
+.idea/
+.editorconfig
+
+# TypeScript source.
 src/
+tsconfig.json
