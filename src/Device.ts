@@ -44,6 +44,51 @@ export class Device extends EventEmitter {
     super();
   }
 
+  /**
+   * Connect to device.
+   */
+  public async connect () {}
+
+  /**
+   * Disconnect from device.
+   */
+  public async disconnect () {}
+
+  /**
+   * 
+   */
+  public async reset () {}
+
+  /**
+   * 
+   */
+  public async getInfo () {}
+
+  /**
+   * 
+   */
+  public async beginEscrow () {}
+
+  /**
+   * 
+   */
+  public async billHold () {}
+
+  /**
+   * 
+   */
+  public async billStack () {}
+
+  /**
+   * 
+   */
+  public async billReturn () {}
+
+  /**
+   * 
+   */
+  public async endEscrow () {}
+
 }
 
 /* End of file Device.ts */
