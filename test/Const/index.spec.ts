@@ -7,7 +7,7 @@
  */
 
 import { expect } from 'chai';
-import * as CashCode from './../src';
+import * as CashCode from './../../src';
 
 describe("CashCode BV", () => {
 

@@ -1,5 +1,5 @@
 /**
- * CCNetParser.ts
+ * Parser.ts
  *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2017 - 2018 Desionlab
@@ -8,13 +8,13 @@
 /// <reference types="node" />
 import { Transform, TransformOptions, TransformCallback } from 'stream';
 /**
- * Class CCNetParser
+ * Class Parser
  *
  * Pars CCNet packet.
  *
  * @version 1.0.0
  */
-export declare class CCNetParser extends Transform {
+export declare class Parser extends Transform {
     /**
      * Packet container.
      */
@@ -24,7 +24,7 @@ export declare class CCNetParser extends Transform {
      */
     protected packetLength: number;
     /**
-     * CCNetParser constructor.
+     * Parser constructor.
      */
     constructor(options?: TransformOptions);
     /**

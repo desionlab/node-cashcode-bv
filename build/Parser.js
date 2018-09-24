@@ -1,6 +1,6 @@
 "use strict";
 /**
- * CCNetParser.ts
+ * Parser.ts
  *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2017 - 2018 Desionlab
@@ -9,16 +9,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const stream_1 = require("stream");
 /**
- * Class CCNetParser
+ * Class Parser
  *
  * Pars CCNet packet.
  *
  * @version 1.0.0
  */
-class CCNetParser extends stream_1.Transform {
+class Parser extends stream_1.Transform {
     /* ----------------------------------------------------------------------- */
     /**
-     * CCNetParser constructor.
+     * Parser constructor.
      */
     constructor(options) {
         super(options);
@@ -51,5 +51,5 @@ class CCNetParser extends stream_1.Transform {
         callback();
     }
 }
-exports.CCNetParser = CCNetParser;
-/* End of file CCNetParser.ts */ 
+exports.Parser = Parser;
+/* End of file Parser.ts */ 
