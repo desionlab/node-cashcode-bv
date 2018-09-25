@@ -6,35 +6,85 @@
  * @license   MIT
  */
 
+import * as CCNet from './Const/CCNet';
+import { getCRC16 } from './Utils';
+
 /**
  * Class Command
  * 
- * An abstract class of device command logic.
+ * An class of device command logic.
  * 
  * @version 1.0.0
  */
-export abstract class Command {
+export class Command {
 
-  public constructor () {
-    
+  /**
+   * Device command code.
+   */
+  protected cmd: number = null;
+
+  /**
+   * Command constructor.
+   * 
+   * @param cmd Device command code.
+   */
+  public constructor (cmd: number) {
+    this.cmd = cmd;
   }
 
-  public request () {
-
-  }
+  public request () {}
 
   /**
    * Processing command response.
    * 
    * @param data Data received from the device.
-   * @returns { any } The processed data are presented in a convenient form.
    */
-  public response (data: Buffer) {
+  public response (data: Buffer) : any {}
 
-  }
+  /**
+   * Assemble command packet.
+   * 
+   * @param params 
+   */
+  protected assemble (params: Buffer = new Buffer(0)) : Buffer {
+    /* Assemble main packet data. */
+    let cmd = Buffer.concat([
+      /* Header. */
+      new Buffer(
+        [
+          CCNet.SYNC,
+          CCNet.ADR_BILL_VALIDATOR
+        ]
+      ),
+      /* Length. */
+      new Buffer(
+        [
+          (params.length + 6)
+        ]
+      ),
+      /* Command. */
+      new Buffer(
+        [
+          this.cmd
+        ]
+      )
+    ]);
 
-  protected assemble () {
+    /* Assemble params packet data. */
+    if (params.length) {
+      cmd = Buffer.concat([
+        /* Main packet data. */
+        cmd,
+        /* Command params. */
+        params
+      ]);
+    }
 
+    /* Assemble full packet data. */
+    return Buffer.concat([
+      cmd,
+      getCRC16(cmd)
+    ]);
   }
 
 }

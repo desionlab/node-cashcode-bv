@@ -9,19 +9,32 @@
 /**
  * Class Command
  *
- * An abstract class of device command logic.
+ * An class of device command logic.
  *
  * @version 1.0.0
  */
-export declare abstract class Command {
-    constructor();
+export declare class Command {
+    /**
+     * Device command code.
+     */
+    protected cmd: number;
+    /**
+     * Command constructor.
+     *
+     * @param cmd Device command code.
+     */
+    constructor(cmd: number);
     request(): void;
     /**
      * Processing command response.
      *
      * @param data Data received from the device.
-     * @returns { any } The processed data are presented in a convenient form.
      */
-    response(data: Buffer): void;
-    protected assemble(): void;
+    response(data: Buffer): any;
+    /**
+     * Assemble command packet.
+     *
+     * @param params
+     */
+    protected assemble(params?: Buffer): Buffer;
 }

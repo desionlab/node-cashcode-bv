@@ -7,4 +7,7 @@
  */
 import * as CCNet from './Const/CCNet';
 export { CCNet };
+export * from './Command';
 export * from './Device';
+export * from './Exception';
+export * from './Utils';
