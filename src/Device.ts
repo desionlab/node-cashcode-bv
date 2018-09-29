@@ -6,11 +6,12 @@
  * @license   MIT
  */
 
+import SerialPort from 'serialport';
 import * as CCNet from './Const/CCNet';
+import * as Commands from './Commands';
+import { Task } from './Task';
 import { Parser } from './Parser';
 import { EventEmitter } from 'events';
-import SerialPort from 'serialport';
-import { Command } from './Command';
 
 /**
  * Class Device
@@ -61,7 +62,12 @@ export class Device extends EventEmitter {
   /**
    * List of pending commands.
    */
-  protected queue: Array<Command> = [];
+  protected queue: Array<Task> = [];
+
+  /**
+   * Operating timer.
+   */
+  protected tickTakInterval: NodeJS.Timer = null;
 
   /* ----------------------------------------------------------------------- */
   
@@ -92,16 +98,21 @@ export class Device extends EventEmitter {
     
     /* --------------------------------------------------------------------- */
 
+    /* Bind operating timer event. */
+    this.on('nextTick', () => this.onNextTick);
+
+    /* --------------------------------------------------------------------- */
+
     /* Create serialport transport. */
     this.serial = new SerialPort(this.port, this.options, null);
     
-    /* On serial open event. */
+    /* Bind serial open event. */
     this.serial.on('open', () => this.onSerialPortOpen);
 
-    /* On serial error event. */
+    /* Bind serial error event. */
     this.serial.on('error', (error) => this.onSerialPortError);
 
-    /* On serial close event. */
+    /* Bind serial close event. */
     this.serial.on('close', () => this.onSerialPortClose);
 
     /* Set CCNet packet parser. */
@@ -177,19 +188,42 @@ export class Device extends EventEmitter {
   /**
    * On serial open event.
    */
-  protected onSerialPortOpen () {}
+  protected onSerialPortOpen () {
+    /* Start operating timer. */
+    this.tickTakInterval = setInterval(() => {
+      this.emit('nextTick');
+    }, 100);
+  }
 
   /**
    * On serial error event.
    * 
    * @param error Serialport error object.
    */
-  protected onSerialPortError (error: Error) {}
+  protected onSerialPortError (error: Error) {
+    /* Stop operating timer. */
+    clearInterval(this.tickTakInterval);
+  }
 
   /**
    * On serial close event.
    */
-  protected onSerialPortClose () {}
+  protected onSerialPortClose () {
+    /* Stop operating timer. */
+    clearInterval(this.tickTakInterval);
+  }
+
+  /**
+   * Operating timer event.
+   */
+  protected onNextTick () {}
+
+  /**
+   * All status events handler.
+   * 
+   * @param status Current devise status.
+   */
+  protected onStatus (status: Buffer) {}
 
   /* ----------------------------------------------------------------------- */
   

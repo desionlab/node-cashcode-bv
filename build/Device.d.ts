@@ -6,10 +6,10 @@
  * @license   MIT
  */
 /// <reference types="node" />
+import SerialPort from 'serialport';
+import { Task } from './Task';
 import { Parser } from './Parser';
 import { EventEmitter } from 'events';
-import SerialPort from 'serialport';
-import { Command } from './Command';
 /**
  * Class Device
  *
@@ -46,7 +46,11 @@ export declare class Device extends EventEmitter {
     /**
      * List of pending commands.
      */
-    protected queue: Array<Command>;
+    protected queue: Array<Task>;
+    /**
+     * Operating timer.
+     */
+    protected tickTakInterval: NodeJS.Timer;
     /**
      * Device constructor.
      *
@@ -113,4 +117,14 @@ export declare class Device extends EventEmitter {
      * On serial close event.
      */
     protected onSerialPortClose(): void;
+    /**
+     * Operating timer event.
+     */
+    protected onNextTick(): void;
+    /**
+     * All status events handler.
+     *
+     * @param status Current devise status.
+     */
+    protected onStatus(status: Buffer): void;
 }

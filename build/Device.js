@@ -10,9 +10,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const serialport_1 = __importDefault(require("serialport"));
 const Parser_1 = require("./Parser");
 const events_1 = require("events");
-const serialport_1 = __importDefault(require("serialport"));
 /**
  * Class Device
  *
@@ -66,6 +66,10 @@ class Device extends events_1.EventEmitter {
          * List of pending commands.
          */
         this.queue = [];
+        /**
+         * Operating timer.
+         */
+        this.tickTakInterval = null;
         /* --------------------------------------------------------------------- */
         /* Set serialport address. */
         this.port = port;
@@ -78,13 +82,16 @@ class Device extends events_1.EventEmitter {
             this.debug = debug;
         }
         /* --------------------------------------------------------------------- */
+        /* Bind operating timer event. */
+        this.on('nextTick', () => this.onNextTick);
+        /* --------------------------------------------------------------------- */
         /* Create serialport transport. */
         this.serial = new serialport_1.default(this.port, this.options, null);
-        /* On serial open event. */
+        /* Bind serial open event. */
         this.serial.on('open', () => this.onSerialPortOpen);
-        /* On serial error event. */
+        /* Bind serial error event. */
         this.serial.on('error', (error) => this.onSerialPortError);
-        /* On serial close event. */
+        /* Bind serial close event. */
         this.serial.on('close', () => this.onSerialPortClose);
         /* Set CCNet packet parser. */
         this.parser = this.serial.pipe(new Parser_1.Parser());
@@ -142,17 +149,38 @@ class Device extends events_1.EventEmitter {
     /**
      * On serial open event.
      */
-    onSerialPortOpen() { }
+    onSerialPortOpen() {
+        /* Start operating timer. */
+        this.tickTakInterval = setInterval(() => {
+            this.emit('nextTick');
+        }, 100);
+    }
     /**
      * On serial error event.
      *
      * @param error Serialport error object.
      */
-    onSerialPortError(error) { }
+    onSerialPortError(error) {
+        /* Stop operating timer. */
+        clearInterval(this.tickTakInterval);
+    }
     /**
      * On serial close event.
      */
-    onSerialPortClose() { }
+    onSerialPortClose() {
+        /* Stop operating timer. */
+        clearInterval(this.tickTakInterval);
+    }
+    /**
+     * Operating timer event.
+     */
+    onNextTick() { }
+    /**
+     * All status events handler.
+     *
+     * @param status Current devise status.
+     */
+    onStatus(status) { }
 }
 exports.Device = Device;
 /* End of file Device.ts */ 

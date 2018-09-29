@@ -32,14 +32,23 @@ export class Command {
     this.cmd = cmd;
   }
 
-  public request () {}
+  /**
+   * Preparing command to send.
+   * 
+   * @param params Parameters of the command being passed.
+   */
+  public request (params: any | null = null) : Buffer {
+    return this.assemble(new Buffer(params));
+  }
 
   /**
    * Processing command response.
    * 
    * @param data Data received from the device.
    */
-  public response (data: Buffer) : any {}
+  public response (data: Buffer) : any {
+    return data;
+  }
 
   /**
    * Assemble command packet.

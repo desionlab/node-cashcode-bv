@@ -24,7 +24,12 @@ export declare class Command {
      * @param cmd Device command code.
      */
     constructor(cmd: number);
-    request(): void;
+    /**
+     * Preparing command to send.
+     *
+     * @param params Parameters of the command being passed.
+     */
+    request(params?: any | null): Buffer;
     /**
      * Processing command response.
      *

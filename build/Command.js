@@ -36,13 +36,22 @@ class Command {
         this.cmd = null;
         this.cmd = cmd;
     }
-    request() { }
+    /**
+     * Preparing command to send.
+     *
+     * @param params Parameters of the command being passed.
+     */
+    request(params = null) {
+        return this.assemble(new Buffer(params));
+    }
     /**
      * Processing command response.
      *
      * @param data Data received from the device.
      */
-    response(data) { }
+    response(data) {
+        return data;
+    }
     /**
      * Assemble command packet.
      *
