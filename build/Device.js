@@ -83,16 +83,16 @@ class Device extends events_1.EventEmitter {
         }
         /* --------------------------------------------------------------------- */
         /* Bind operating timer event. */
-        this.on('nextTick', () => this.onNextTick);
+        this.on('tick', () => { this.onTick(); });
         /* --------------------------------------------------------------------- */
         /* Create serialport transport. */
         this.serial = new serialport_1.default(this.port, this.options, null);
         /* Bind serial open event. */
-        this.serial.on('open', () => this.onSerialPortOpen);
+        this.serial.on('open', () => { this.onSerialPortOpen(); });
         /* Bind serial error event. */
-        this.serial.on('error', (error) => this.onSerialPortError);
+        this.serial.on('error', (error) => { this.onSerialPortError(error); });
         /* Bind serial close event. */
-        this.serial.on('close', () => this.onSerialPortClose);
+        this.serial.on('close', () => { this.onSerialPortClose(); });
         /* Set CCNet packet parser. */
         this.parser = this.serial.pipe(new Parser_1.Parser());
         /* --------------------------------------------------------------------- */
@@ -107,12 +107,34 @@ class Device extends events_1.EventEmitter {
     /* ----------------------------------------------------------------------- */
     /**
      * Connect to device.
+     *
+     * @param autoInit Initialize the device immediately?
      */
-    async connect() { }
+    async connect(autoInit = true) {
+        try {
+            /*  */
+            await this.open();
+            if (autoInit) {
+            }
+            else {
+                this.emit('connect');
+            }
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     /**
      * Disconnect from device.
      */
-    async disconnect() { }
+    async disconnect() {
+        try {
+            await this.close();
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     /**
      *
      */
@@ -147,12 +169,49 @@ class Device extends events_1.EventEmitter {
     async endEscrow() { }
     /* ----------------------------------------------------------------------- */
     /**
+     *
+     */
+    open() {
+        return new Promise((resolve, reject) => {
+            if (this.serial.isOpen) {
+                resolve(true);
+            }
+            else {
+                this.serial.open((error) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(true);
+                });
+            }
+        });
+    }
+    /**
+     * Close serialport.
+     */
+    close() {
+        return new Promise((resolve, reject) => {
+            if (this.serial.isOpen) {
+                this.serial.close((error) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(true);
+                });
+            }
+            else {
+                resolve(true);
+            }
+        });
+    }
+    /* ----------------------------------------------------------------------- */
+    /**
      * On serial open event.
      */
     onSerialPortOpen() {
         /* Start operating timer. */
         this.tickTakInterval = setInterval(() => {
-            this.emit('nextTick');
+            this.emit('tick');
         }, 100);
     }
     /**
@@ -172,15 +231,15 @@ class Device extends events_1.EventEmitter {
         clearInterval(this.tickTakInterval);
     }
     /**
-     * Operating timer event.
-     */
-    onNextTick() { }
-    /**
      * All status events handler.
      *
      * @param status Current devise status.
      */
     onStatus(status) { }
+    /**
+     * Operating timer event.
+     */
+    onTick() { }
 }
 exports.Device = Device;
 /* End of file Device.ts */ 

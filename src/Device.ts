@@ -8,6 +8,7 @@
 
 import SerialPort from 'serialport';
 import * as CCNet from './Const/CCNet';
+import { Command } from './Command';
 import * as Commands from './Commands';
 import { Task } from './Task';
 import { Parser } from './Parser';
@@ -99,7 +100,7 @@ export class Device extends EventEmitter {
     /* --------------------------------------------------------------------- */
 
     /* Bind operating timer event. */
-    this.on('nextTick', () => this.onNextTick);
+    this.on('tick', () => { this.onTick(); });
 
     /* --------------------------------------------------------------------- */
 
@@ -107,13 +108,13 @@ export class Device extends EventEmitter {
     this.serial = new SerialPort(this.port, this.options, null);
     
     /* Bind serial open event. */
-    this.serial.on('open', () => this.onSerialPortOpen);
+    this.serial.on('open', () => { this.onSerialPortOpen(); });
 
     /* Bind serial error event. */
-    this.serial.on('error', (error) => this.onSerialPortError);
+    this.serial.on('error', (error) => { this.onSerialPortError(error); });
 
     /* Bind serial close event. */
-    this.serial.on('close', () => this.onSerialPortClose);
+    this.serial.on('close', () => { this.onSerialPortClose(); });
 
     /* Set CCNet packet parser. */
     this.parser = this.serial.pipe(new Parser());
@@ -135,13 +136,57 @@ export class Device extends EventEmitter {
   
   /**
    * Connect to device.
+   * 
+   * @param autoInit Initialize the device immediately?
    */
-  public async connect () : Promise<any> {}
+  public async connect (autoInit: boolean = true) : Promise<any> {
+    try {
+      /*  */
+      await this.open();
+
+      if (autoInit) {
+        /*  */
+        this.once('initialize', async () => {
+          /*  */
+          await this.execute((new Commands.Identification()));
+
+          /*  */
+          await this.execute((new Commands.GetBillTable()));
+
+          /*  */
+          await this.execute((new Commands.GetCRC32OfTheCode()));
+
+          /*  */
+          this.emit('connect');
+          
+          /*  */
+          return true;
+        });
+        
+        /*  */
+        await this.execute((new Commands.Reset()));
+      } else {
+        /*  */
+        this.emit('connect');
+        
+        /*  */
+        return true;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * Disconnect from device.
    */
-  public async disconnect () : Promise<any> {}
+  public async disconnect () : Promise<any> {
+    try {
+      await this.close(); 
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * 
@@ -184,6 +229,46 @@ export class Device extends EventEmitter {
   public async endEscrow () : Promise<any> {}
 
   /* ----------------------------------------------------------------------- */
+
+  /**
+   * 
+   */
+  protected open () : Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (this.serial.isOpen) {
+        resolve(true);
+      } else {
+        this.serial.open((error) => {
+          if (error) {
+            reject(error);
+          }
+  
+          resolve(true);
+        });
+      }
+    });
+  }
+  
+  /**
+   * Close serialport.
+   */
+  protected close () : Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (this.serial.isOpen) {
+        this.serial.close((error) => {
+          if (error) {
+            reject(error);
+          }
+  
+          resolve(true);
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  }
+
+  /* ----------------------------------------------------------------------- */
   
   /**
    * On serial open event.
@@ -191,7 +276,7 @@ export class Device extends EventEmitter {
   protected onSerialPortOpen () {
     /* Start operating timer. */
     this.tickTakInterval = setInterval(() => {
-      this.emit('nextTick');
+      this.emit('tick');
     }, 100);
   }
 
@@ -212,12 +297,7 @@ export class Device extends EventEmitter {
     /* Stop operating timer. */
     clearInterval(this.tickTakInterval);
   }
-
-  /**
-   * Operating timer event.
-   */
-  protected onNextTick () {}
-
+  
   /**
    * All status events handler.
    * 
@@ -225,8 +305,36 @@ export class Device extends EventEmitter {
    */
   protected onStatus (status: Buffer) {}
 
+  /**
+   * Operating timer event.
+   */
+  protected onTick () {}
+
   /* ----------------------------------------------------------------------- */
   
+  /**
+   * Execute the specified command.
+   * 
+   * @param command Target command.
+   * @param params Execute parameters.
+   * @param timeout The maximum time to complete this action.
+   */
+  public async execute (command: Command, params: any = [], timeout: number = 1000) : Promise<any> {
+    return new Promise((resolve, reject) => {
+      /* Create network task. */
+      let task = new Task(command.request(params), (error, data) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(command.response(data));
+      });
+
+      /* Add task to queue. */
+      this.queue.push(task);
+    });
+  }
+
 }
 
 /* End of file Device.ts */

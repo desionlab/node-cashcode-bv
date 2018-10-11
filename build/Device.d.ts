@@ -65,8 +65,10 @@ export declare class Device extends EventEmitter {
     readonly isConnect: boolean;
     /**
      * Connect to device.
+     *
+     * @param autoInit Initialize the device immediately?
      */
-    connect(): Promise<any>;
+    connect(autoInit?: boolean): Promise<any>;
     /**
      * Disconnect from device.
      */
@@ -104,6 +106,14 @@ export declare class Device extends EventEmitter {
      */
     endEscrow(): Promise<any>;
     /**
+     *
+     */
+    protected open(): Promise<any>;
+    /**
+     * Close serialport.
+     */
+    protected close(): Promise<any>;
+    /**
      * On serial open event.
      */
     protected onSerialPortOpen(): void;
@@ -118,13 +128,13 @@ export declare class Device extends EventEmitter {
      */
     protected onSerialPortClose(): void;
     /**
-     * Operating timer event.
-     */
-    protected onNextTick(): void;
-    /**
      * All status events handler.
      *
      * @param status Current devise status.
      */
     protected onStatus(status: Buffer): void;
+    /**
+     * Operating timer event.
+     */
+    protected onTick(): void;
 }
