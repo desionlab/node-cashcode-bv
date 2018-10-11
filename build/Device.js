@@ -9,8 +9,17 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const serialport_1 = __importDefault(require("serialport"));
+const Commands = __importStar(require("./Commands"));
+const Task_1 = require("./Task");
 const Parser_1 = require("./Parser");
 const events_1 = require("events");
 /**
@@ -28,9 +37,9 @@ class Device extends events_1.EventEmitter {
      *
      * @param port Serial port address.
      * @param options Serial port open options.
-     * @param debug Printing debug info.
+     * @param logger Logger instant.
      */
-    constructor(port, options, debug) {
+    constructor(port, options, logger) {
         super();
         /**
          * Serialport address.
@@ -47,9 +56,12 @@ class Device extends events_1.EventEmitter {
             autoOpen: false
         };
         /**
-         * Debug mode flag.
+         * The logger. You can pass electron-log, winston or another logger
+         * with the following interface: { info(), debug(), warn(), error() }.
+         * Set it to null if you would like to disable a logging feature.
          */
-        this.debug = false;
+        this.logger = null;
+        /* ----------------------------------------------------------------------- */
         /**
          * Serialport transport instant.
          */
@@ -58,18 +70,24 @@ class Device extends events_1.EventEmitter {
          * CCNet packet parser instant.
          */
         this.parser = null;
+        /* ----------------------------------------------------------------------- */
         /**
          * Main status code.
          */
         this.status = null;
+        /* ----------------------------------------------------------------------- */
         /**
          * List of pending commands.
          */
         this.queue = [];
         /**
+         *
+         */
+        this.timerMs = 100;
+        /**
          * Operating timer.
          */
-        this.tickTakInterval = null;
+        this.timerInterval = null;
         /* --------------------------------------------------------------------- */
         /* Set serialport address. */
         this.port = port;
@@ -77,13 +95,17 @@ class Device extends events_1.EventEmitter {
         if (options) {
             this.options = Object.assign(this.options, options);
         }
-        /* Set debug flag. */
-        if (debug) {
-            this.debug = debug;
+        /* Set logger instant. */
+        if (logger) {
+            this.logger = logger;
         }
         /* --------------------------------------------------------------------- */
         /* Bind operating timer event. */
-        this.on('tick', () => { this.onTick(); });
+        this.on('tick', () => {
+            setImmediate(() => {
+                this.onTick();
+            });
+        });
         /* --------------------------------------------------------------------- */
         /* Create serialport transport. */
         this.serial = new serialport_1.default(this.port, this.options, null);
@@ -107,18 +129,25 @@ class Device extends events_1.EventEmitter {
     /* ----------------------------------------------------------------------- */
     /**
      * Connect to device.
-     *
-     * @param autoInit Initialize the device immediately?
      */
-    async connect(autoInit = true) {
+    async connect() {
         try {
             /*  */
             await this.open();
-            if (autoInit) {
-            }
-            else {
-                this.emit('connect');
-            }
+            /*  */
+            await this.execute((new Commands.Reset()));
+            /*  */
+            await this.asyncOnce('initialize');
+            /*  */
+            await this.execute((new Commands.Identification()));
+            /*  */
+            await this.execute((new Commands.GetBillTable()));
+            /*  */
+            await this.execute((new Commands.GetCRC32OfTheCode()));
+            /*  */
+            this.emit('connect');
+            /*  */
+            return true;
         }
         catch (error) {
             throw error;
@@ -169,7 +198,7 @@ class Device extends events_1.EventEmitter {
     async endEscrow() { }
     /* ----------------------------------------------------------------------- */
     /**
-     *
+     * Open serialport.
      */
     open() {
         return new Promise((resolve, reject) => {
@@ -210,9 +239,9 @@ class Device extends events_1.EventEmitter {
      */
     onSerialPortOpen() {
         /* Start operating timer. */
-        this.tickTakInterval = setInterval(() => {
+        this.timerInterval = setInterval(() => {
             this.emit('tick');
-        }, 100);
+        }, this.timerMs);
     }
     /**
      * On serial error event.
@@ -221,14 +250,14 @@ class Device extends events_1.EventEmitter {
      */
     onSerialPortError(error) {
         /* Stop operating timer. */
-        clearInterval(this.tickTakInterval);
+        clearInterval(this.timerInterval);
     }
     /**
      * On serial close event.
      */
     onSerialPortClose() {
         /* Stop operating timer. */
-        clearInterval(this.tickTakInterval);
+        clearInterval(this.timerInterval);
     }
     /**
      * All status events handler.
@@ -240,6 +269,53 @@ class Device extends events_1.EventEmitter {
      * Operating timer event.
      */
     onTick() { }
+    /* ----------------------------------------------------------------------- */
+    /**
+     * Execute the specified command.
+     *
+     * @param command Target command.
+     * @param params Execute parameters.
+     * @param timeout The maximum time to complete this action.
+     */
+    async execute(command, params = [], timeout = 1000) {
+        return new Promise((resolve, reject) => {
+            /* Create network task. */
+            let task = new Task_1.Task(command.request(params), (error, data) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(command.response(data));
+            });
+            /* Add task to queue. */
+            this.queue.push(task);
+        });
+    }
+    /**
+     *
+     */
+    async asyncOnce(event, timeout = 1000) {
+        return new Promise((resolve, reject) => {
+            let timeoutCounter = 0;
+            let timeoutHandler = () => {
+                setImmediate(() => {
+                    timeoutCounter += this.timerMs;
+                    if (timeoutCounter >= timeout) {
+                        this.removeListener('tick', timeoutHandler);
+                        reject();
+                    }
+                });
+            };
+            this.once(event, () => {
+                if (timeout) {
+                    this.removeListener('tick', timeoutHandler);
+                }
+                resolve();
+            });
+            if (timeout) {
+                this.on('tick', timeoutHandler);
+            }
+        });
+    }
 }
 exports.Device = Device;
 /* End of file Device.ts */ 

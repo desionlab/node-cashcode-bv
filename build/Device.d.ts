@@ -7,6 +7,7 @@
  */
 /// <reference types="node" />
 import SerialPort from 'serialport';
+import { Command } from './Command';
 import { Task } from './Task';
 import { Parser } from './Parser';
 import { EventEmitter } from 'events';
@@ -28,9 +29,11 @@ export declare class Device extends EventEmitter {
      */
     protected options: SerialPort.OpenOptions;
     /**
-     * Debug mode flag.
+     * The logger. You can pass electron-log, winston or another logger
+     * with the following interface: { info(), debug(), warn(), error() }.
+     * Set it to null if you would like to disable a logging feature.
      */
-    protected debug: boolean;
+    protected logger: any;
     /**
      * Serialport transport instant.
      */
@@ -48,27 +51,29 @@ export declare class Device extends EventEmitter {
      */
     protected queue: Array<Task>;
     /**
+     *
+     */
+    protected timerMs: number;
+    /**
      * Operating timer.
      */
-    protected tickTakInterval: NodeJS.Timer;
+    protected timerInterval: NodeJS.Timer;
     /**
      * Device constructor.
      *
      * @param port Serial port address.
      * @param options Serial port open options.
-     * @param debug Printing debug info.
+     * @param logger Logger instant.
      */
-    constructor(port: string, options?: SerialPort.OpenOptions, debug?: boolean);
+    constructor(port: string, options?: SerialPort.OpenOptions, logger?: any);
     /**
      * Flag of the established connection to the device.
      */
     readonly isConnect: boolean;
     /**
      * Connect to device.
-     *
-     * @param autoInit Initialize the device immediately?
      */
-    connect(autoInit?: boolean): Promise<any>;
+    connect(): Promise<any>;
     /**
      * Disconnect from device.
      */
@@ -106,7 +111,7 @@ export declare class Device extends EventEmitter {
      */
     endEscrow(): Promise<any>;
     /**
-     *
+     * Open serialport.
      */
     protected open(): Promise<any>;
     /**
@@ -137,4 +142,16 @@ export declare class Device extends EventEmitter {
      * Operating timer event.
      */
     protected onTick(): void;
+    /**
+     * Execute the specified command.
+     *
+     * @param command Target command.
+     * @param params Execute parameters.
+     * @param timeout The maximum time to complete this action.
+     */
+    execute(command: Command, params?: any, timeout?: number): Promise<any>;
+    /**
+     *
+     */
+    asyncOnce(event: string | symbol, timeout?: number): Promise<any>;
 }

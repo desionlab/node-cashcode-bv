@@ -41,10 +41,14 @@ export class Device extends EventEmitter {
   };
   
   /**
-   * Debug mode flag.
+   * The logger. You can pass electron-log, winston or another logger
+   * with the following interface: { info(), debug(), warn(), error() }.
+   * Set it to null if you would like to disable a logging feature.
    */
-  protected debug: boolean = false;
+  protected logger: any = null;
 
+  /* ----------------------------------------------------------------------- */
+  
   /**
    * Serialport transport instant.
    */
@@ -55,20 +59,29 @@ export class Device extends EventEmitter {
    */
   protected parser: Parser = null;
   
+  /* ----------------------------------------------------------------------- */
+  
   /**
    * Main status code.
    */
   protected status: number = null;
 
+  /* ----------------------------------------------------------------------- */
+  
   /**
    * List of pending commands.
    */
   protected queue: Array<Task> = [];
 
   /**
+   * 
+   */
+  protected timerMs: number = 100;
+
+  /**
    * Operating timer.
    */
-  protected tickTakInterval: NodeJS.Timer = null;
+  protected timerInterval: NodeJS.Timer = null;
 
   /* ----------------------------------------------------------------------- */
   
@@ -77,9 +90,9 @@ export class Device extends EventEmitter {
    * 
    * @param port Serial port address.
    * @param options Serial port open options.
-   * @param debug Printing debug info.
+   * @param logger Logger instant.
    */
-  public constructor (port: string, options?: SerialPort.OpenOptions, debug?: boolean) {
+  public constructor (port: string, options?: SerialPort.OpenOptions, logger?: any) {
     super();
     
     /* --------------------------------------------------------------------- */
@@ -92,15 +105,19 @@ export class Device extends EventEmitter {
       this.options = Object.assign(this.options, options);
     }
 
-    /* Set debug flag. */
-    if (debug) {
-      this.debug = debug;
+    /* Set logger instant. */
+    if (logger) {
+      this.logger = logger;
     }
     
     /* --------------------------------------------------------------------- */
 
     /* Bind operating timer event. */
-    this.on('tick', () => { this.onTick(); });
+    this.on('tick', () => {
+      setImmediate(() => {
+        this.onTick();
+      });
+    });
 
     /* --------------------------------------------------------------------- */
 
@@ -136,42 +153,32 @@ export class Device extends EventEmitter {
   
   /**
    * Connect to device.
-   * 
-   * @param autoInit Initialize the device immediately?
    */
-  public async connect (autoInit: boolean = true) : Promise<any> {
+  public async connect () : Promise<any> {
     try {
       /*  */
       await this.open();
 
-      if (autoInit) {
-        /*  */
-        this.once('initialize', async () => {
-          /*  */
-          await this.execute((new Commands.Identification()));
+      /*  */
+      await this.execute((new Commands.Reset()));
 
-          /*  */
-          await this.execute((new Commands.GetBillTable()));
+      /*  */
+      await this.asyncOnce('initialize');
 
-          /*  */
-          await this.execute((new Commands.GetCRC32OfTheCode()));
+      /*  */
+      await this.execute((new Commands.Identification()));
 
-          /*  */
-          this.emit('connect');
-          
-          /*  */
-          return true;
-        });
-        
-        /*  */
-        await this.execute((new Commands.Reset()));
-      } else {
-        /*  */
-        this.emit('connect');
-        
-        /*  */
-        return true;
-      }
+      /*  */
+      await this.execute((new Commands.GetBillTable()));
+
+      /*  */
+      await this.execute((new Commands.GetCRC32OfTheCode()));
+
+      /*  */
+      this.emit('connect');
+      
+      /*  */
+      return true;
     } catch (error) {
       throw error;
     }
@@ -231,7 +238,7 @@ export class Device extends EventEmitter {
   /* ----------------------------------------------------------------------- */
 
   /**
-   * 
+   * Open serialport.
    */
   protected open () : Promise<any> {
     return new Promise((resolve, reject) => {
@@ -275,9 +282,9 @@ export class Device extends EventEmitter {
    */
   protected onSerialPortOpen () {
     /* Start operating timer. */
-    this.tickTakInterval = setInterval(() => {
+    this.timerInterval = setInterval(() => {
       this.emit('tick');
-    }, 100);
+    }, this.timerMs);
   }
 
   /**
@@ -287,7 +294,7 @@ export class Device extends EventEmitter {
    */
   protected onSerialPortError (error: Error) {
     /* Stop operating timer. */
-    clearInterval(this.tickTakInterval);
+    clearInterval(this.timerInterval);
   }
 
   /**
@@ -295,7 +302,7 @@ export class Device extends EventEmitter {
    */
   protected onSerialPortClose () {
     /* Stop operating timer. */
-    clearInterval(this.tickTakInterval);
+    clearInterval(this.timerInterval);
   }
   
   /**
@@ -332,6 +339,38 @@ export class Device extends EventEmitter {
 
       /* Add task to queue. */
       this.queue.push(task);
+    });
+  }
+
+  /**
+   * 
+   */
+  public async asyncOnce (event: string | symbol, timeout: number = 1000) : Promise<any> {
+    return new Promise((resolve, reject) => {
+      let timeoutCounter: number = 0;
+
+      let timeoutHandler = () => {
+        setImmediate(() => {
+          timeoutCounter += this.timerMs;
+
+          if (timeoutCounter >= timeout) {
+            this.removeListener('tick', timeoutHandler);
+            reject();
+          }
+        });
+      };
+
+      this.once(event, () => {
+        if (timeout) {
+          this.removeListener('tick', timeoutHandler);
+        }
+
+        resolve();
+      });
+
+      if (timeout) {
+        this.on('tick', timeoutHandler);
+      }
     });
   }
 
