@@ -20,8 +20,9 @@ class Task {
      *
      * @param command Data for send to the device.
      * @param done Event of the device command execution.
+     * @param timeout The maximum time to complete this task.
      */
-    constructor(data, done) {
+    constructor(data, done, timeout = 1000) {
         /**
          * Data for send to the device.
          */
@@ -30,8 +31,13 @@ class Task {
          * Event of the device command execution.
          */
         this.done = null;
+        /**
+         * The maximum time to complete this task.
+         */
+        this.timeout = 1000;
         this.data = data;
         this.done = done;
+        this.timeout = timeout;
     }
 }
 exports.Task = Task;

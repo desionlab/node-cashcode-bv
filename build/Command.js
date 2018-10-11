@@ -41,7 +41,7 @@ class Command {
      *
      * @param params Parameters of the command being passed.
      */
-    request(params = null) {
+    request(params = []) {
         return this.assemble(new Buffer(params));
     }
     /**

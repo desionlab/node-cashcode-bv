@@ -22,6 +22,8 @@ const Commands = __importStar(require("./Commands"));
 const Task_1 = require("./Task");
 const Parser_1 = require("./Parser");
 const events_1 = require("events");
+const Exception_1 = require("./Exception");
+const Utils_1 = require("./Utils");
 /**
  * Class Device
  *
@@ -75,6 +77,10 @@ class Device extends events_1.EventEmitter {
          * Main status code.
          */
         this.status = null;
+        /**
+         * A flag indicating the current command execution.
+         */
+        this.busy = false;
         /* ----------------------------------------------------------------------- */
         /**
          * List of pending commands.
@@ -126,6 +132,12 @@ class Device extends events_1.EventEmitter {
     get isConnect() {
         return (this.serial.isOpen);
     }
+    /**
+     * A flag indicating the current command execution.
+     */
+    get isBusy() {
+        return this.busy;
+    }
     /* ----------------------------------------------------------------------- */
     /**
      * Connect to device.
@@ -135,9 +147,9 @@ class Device extends events_1.EventEmitter {
             /*  */
             await this.open();
             /*  */
-            await this.execute((new Commands.Reset()));
+            await this.reset();
             /*  */
-            await this.asyncOnce('initialize');
+            //await this.asyncOnce('initialize');
             /*  */
             await this.execute((new Commands.Identification()));
             /*  */
@@ -165,9 +177,11 @@ class Device extends events_1.EventEmitter {
         }
     }
     /**
-     *
+     * Reset the device to its original state.
      */
-    async reset() { }
+    async reset() {
+        return await this.execute((new Commands.Reset()));
+    }
     /**
      *
      */
@@ -268,7 +282,98 @@ class Device extends events_1.EventEmitter {
     /**
      * Operating timer event.
      */
-    onTick() { }
+    onTick() {
+        /* Check busy flag. */
+        if (!this.busy) {
+            let task = this.queue.shift();
+            /* Check next task. */
+            if (typeof task !== 'undefined' && task instanceof Task_1.Task) {
+                /* Update flag. */
+                this.busy = true;
+                let timeoutCounter = 0;
+                /* Timeout timer handler. */
+                let timeoutHandler = () => {
+                    setImmediate(() => {
+                        timeoutCounter += this.timerMs;
+                        if (timeoutCounter >= task.timeout) {
+                            this.busy = false;
+                            this.removeListener('tick', timeoutHandler);
+                            task.done(new Exception_1.Exception(10, 'Request timeout.'), null);
+                        }
+                    });
+                };
+                /* Receive packet handler. */
+                let handler = async (response) => {
+                    this.removeListener('tick', timeoutHandler);
+                    /* Unbind event. */
+                    this.parser.removeListener('data', handler);
+                    /* Write debug info. */
+                    if (this.logger) {
+                        this.logger.debug('Receive packet:', response);
+                    }
+                    /* Check CRC */
+                    let ln = response.length;
+                    let check = response.slice(ln - 2, ln);
+                    let slice = response.slice(0, ln - 2);
+                    /* Check response CRC. */
+                    if (check.toString() !== (Utils_1.getCRC16(slice)).toString()) {
+                        /* Send NAK. */
+                        await this.serial.write((new Commands.Nak()).request());
+                        /* Update flag. */
+                        this.busy = false;
+                        /* Send event. */
+                        task.done(new Exception_1.Exception(11, 'Wrong response data hash.'), null);
+                    }
+                    /* Get data from packet. */
+                    let data = response.slice(3, ln - 2);
+                    /* Check response type. */
+                    if (data.length == 1 && data[0] == 0x00) {
+                        /* Response receive as ACK. */
+                    }
+                    else if (data.length == 1 && data[0] == 0xFF) {
+                        /* Response receive as NAK. */
+                        /* Update flag. */
+                        this.busy = false;
+                        /* Send event. */
+                        task.done(new Exception_1.Exception(11, 'Wrong request data hash.'), null);
+                    }
+                    else {
+                        /* Send ACK. */
+                        await this.serial.write((new Commands.Ack()).request());
+                    }
+                    /* Update flag. */
+                    this.busy = false;
+                    /* Send event. */
+                    task.done(null, data);
+                };
+                /* Bind event. */
+                this.parser.once('data', handler);
+                /* Write debug info. */
+                if (this.logger) {
+                    this.logger.debug('Send packet:', task.data);
+                }
+                /* Send packet. */
+                this.serial.write(task.data);
+                /* Bind timeout handler. */
+                if (task.timeout) {
+                    this.on('tick', timeoutHandler);
+                }
+            }
+            else {
+                /* Add poll task to queue. */
+                this.queue.push(new Task_1.Task((new Commands.Poll()).request(), (error, data) => {
+                    if (error) {
+                        throw error;
+                    }
+                    this.onStatus(data);
+                }, 1000));
+            }
+        }
+        /* Write debug info. */
+        if (this.logger) {
+            this.logger.debug('Queue length:', this.queue.length);
+        }
+    }
     /* ----------------------------------------------------------------------- */
     /**
      * Execute the specified command.
@@ -279,19 +384,20 @@ class Device extends events_1.EventEmitter {
      */
     async execute(command, params = [], timeout = 1000) {
         return new Promise((resolve, reject) => {
-            /* Create network task. */
             let task = new Task_1.Task(command.request(params), (error, data) => {
                 if (error) {
                     reject(error);
                 }
                 resolve(command.response(data));
-            });
-            /* Add task to queue. */
+            }, timeout);
             this.queue.push(task);
         });
     }
     /**
+     * Synchronization of internal events with the execution queue.
      *
+     * @param event Internal event name.
+     * @param timeout Maximum waiting time for an internal event.
      */
     async asyncOnce(event, timeout = 1000) {
         return new Promise((resolve, reject) => {

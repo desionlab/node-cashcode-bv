@@ -37,7 +37,7 @@ export class Command {
    * 
    * @param params Parameters of the command being passed.
    */
-  public request (params: any | null = null) : Buffer {
+  public request (params: any | null = []) : Buffer {
     return this.assemble(new Buffer(params));
   }
 

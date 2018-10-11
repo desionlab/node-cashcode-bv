@@ -916,6 +916,9 @@ img { max-width: 100%; }
 					<a href="_device_.device.html#constructor" class="tsd-kind-icon">constructor</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a href="_device_.device.html#busy" class="tsd-kind-icon">busy</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 					<a href="_device_.device.html#logger" class="tsd-kind-icon">logger</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
@@ -941,6 +944,9 @@ img { max-width: 100%; }
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 					<a href="_device_.device.html#defaultmaxlisteners" class="tsd-kind-icon">default<wbr>Max<wbr>Listeners</a>
+				</li>
+				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+					<a href="_device_.device.html#isbusy" class="tsd-kind-icon">is<wbr>Busy</a>
 				</li>
 				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 					<a href="_device_.device.html#isconnect" class="tsd-kind-icon">is<wbr>Connect</a>
@@ -1099,6 +1105,7 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_device_.device.html#busy" class="tsd-kind-icon">busy</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_device_.device.html#logger" class="tsd-kind-icon">logger</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_device_.device.html#parser" class="tsd-kind-icon">parser</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_device_.device.html#port" class="tsd-kind-icon">port</a></li>
@@ -1113,6 +1120,7 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Accessors</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_device_.device.html#isbusy" class="tsd-kind-icon">is<wbr>Busy</a></li>
 							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_device_.device.html#isconnect" class="tsd-kind-icon">is<wbr>Connect</a></li>
 						</ul>
 					</section>
@@ -1177,7 +1185,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L84">Device.ts:84</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L91">Device.ts:91</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1220,12 +1228,27 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+				<a name="busy" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagProtected">Protected</span> busy</h3>
+				<div class="tsd-signature tsd-kind-icon">busy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L74">Device.ts:74</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A flag indicating the current command execution.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 				<a name="logger" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagProtected">Protected</span> logger</h3>
 				<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L48">Device.ts:48</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L50">Device.ts:50</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1242,7 +1265,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">parser<span class="tsd-signature-symbol">:</span> <a href="_parser_.parser.html" class="tsd-signature-type">Parser</a><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L60">Device.ts:60</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L62">Device.ts:62</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1257,7 +1280,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">port<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L30">Device.ts:30</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L32">Device.ts:32</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1272,7 +1295,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">queue<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="_task_.task.html" class="tsd-signature-type">Task</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L74">Device.ts:74</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L81">Device.ts:81</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1287,7 +1310,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">serial<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SerialPort</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L55">Device.ts:55</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L57">Device.ts:57</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1302,7 +1325,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L67">Device.ts:67</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L69">Device.ts:69</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1317,7 +1340,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">timer<wbr>Interval<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Timer</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L84">Device.ts:84</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L91">Device.ts:91</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1332,7 +1355,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">timer<wbr>Ms<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;100</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L79">Device.ts:79</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L86">Device.ts:86</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1351,12 +1374,27 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Accessors</h2>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+				<a name="isbusy" class="tsd-anchor"></a>
+				<h3>is<wbr>Busy</h3>
+				<div class="tsd-signature tsd-kind-icon">is<wbr>Busy<span class="tsd-signature-symbol">:</span> </div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L162">Device.ts:162</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A flag indicating the current command execution.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="isconnect" class="tsd-anchor"></a>
 				<h3>is<wbr>Connect</h3>
 				<div class="tsd-signature tsd-kind-icon">is<wbr>Connect<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L148">Device.ts:148</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L155">Device.ts:155</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1424,16 +1462,27 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L348">Device.ts:348</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L476">Device.ts:476</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Synchronization of internal events with the execution queue.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>event: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Internal event name.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1000</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Maximum waiting time for an internal event.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1450,7 +1499,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L216">Device.ts:216</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L232">Device.ts:232</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1467,7 +1516,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L221">Device.ts:221</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L237">Device.ts:237</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1484,7 +1533,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L231">Device.ts:231</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L247">Device.ts:247</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1501,7 +1550,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L226">Device.ts:226</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L242">Device.ts:242</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1518,7 +1567,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L262">Device.ts:262</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L278">Device.ts:278</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1540,7 +1589,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L157">Device.ts:157</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L171">Device.ts:171</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1562,7 +1611,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L190">Device.ts:190</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L204">Device.ts:204</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1612,7 +1661,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L236">Device.ts:236</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L252">Device.ts:252</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1648,7 +1697,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L329">Device.ts:329</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L456">Device.ts:456</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1691,7 +1740,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L211">Device.ts:211</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L227">Device.ts:227</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1708,7 +1757,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L206">Device.ts:206</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L222">Device.ts:222</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1886,7 +1935,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L303">Device.ts:303</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L319">Device.ts:319</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1908,7 +1957,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L295">Device.ts:295</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L311">Device.ts:311</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1939,7 +1988,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L283">Device.ts:283</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L299">Device.ts:299</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1961,7 +2010,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L313">Device.ts:313</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L329">Device.ts:329</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1992,7 +2041,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L318">Device.ts:318</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L334">Device.ts:334</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2060,7 +2109,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L243">Device.ts:243</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L259">Device.ts:259</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2270,9 +2319,14 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L201">Device.ts:201</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L215">Device.ts:215</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Reset the device to its original state.</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 					</li>
 				</ul>
@@ -2345,7 +2399,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L35">Device.ts:35</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L37">Device.ts:37</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2359,7 +2413,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">auto<wbr>Open<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L40">Device.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L42">Device.ts:42</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2369,7 +2423,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">baud<wbr>Rate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;9600</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L36">Device.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L38">Device.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2379,7 +2433,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">data<wbr>Bits<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">8</span><span class="tsd-signature-symbol"> =&nbsp;8</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L37">Device.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L39">Device.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2389,7 +2443,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">parity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"none"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;none&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L39">Device.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L41">Device.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2399,7 +2453,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">stop<wbr>Bits<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">1</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Device.ts#L38">Device.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Device.ts#L40">Device.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>

@@ -32,10 +32,15 @@ export declare class Task {
      */
     done: OnTaskDone;
     /**
+     * The maximum time to complete this task.
+     */
+    timeout: number;
+    /**
      * Task constructor.
      *
      * @param command Data for send to the device.
      * @param done Event of the device command execution.
+     * @param timeout The maximum time to complete this task.
      */
-    constructor(data: Buffer, done: OnTaskDone);
+    constructor(data: Buffer, done: OnTaskDone, timeout?: number);
 }

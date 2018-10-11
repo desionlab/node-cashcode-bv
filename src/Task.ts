@@ -37,14 +37,21 @@ export class Task {
   public done: OnTaskDone = null;
 
   /**
+   * The maximum time to complete this task.
+   */
+  public timeout: number = 1000;
+
+  /**
    * Task constructor.
    * 
    * @param command Data for send to the device.
    * @param done Event of the device command execution.
+   * @param timeout The maximum time to complete this task.
    */
-  public constructor (data: Buffer, done: OnTaskDone) {
+  public constructor (data: Buffer, done: OnTaskDone, timeout: number = 1000) {
     this.data = data;
     this.done = done;
+    this.timeout = timeout;
   }
 
 }

@@ -47,6 +47,10 @@ export declare class Device extends EventEmitter {
      */
     protected status: number;
     /**
+     * A flag indicating the current command execution.
+     */
+    protected busy: boolean;
+    /**
      * List of pending commands.
      */
     protected queue: Array<Task>;
@@ -71,6 +75,10 @@ export declare class Device extends EventEmitter {
      */
     readonly isConnect: boolean;
     /**
+     * A flag indicating the current command execution.
+     */
+    readonly isBusy: boolean;
+    /**
      * Connect to device.
      */
     connect(): Promise<any>;
@@ -79,7 +87,7 @@ export declare class Device extends EventEmitter {
      */
     disconnect(): Promise<any>;
     /**
-     *
+     * Reset the device to its original state.
      */
     reset(): Promise<any>;
     /**
@@ -151,7 +159,10 @@ export declare class Device extends EventEmitter {
      */
     execute(command: Command, params?: any, timeout?: number): Promise<any>;
     /**
+     * Synchronization of internal events with the execution queue.
      *
+     * @param event Internal event name.
+     * @param timeout Maximum waiting time for an internal event.
      */
     asyncOnce(event: string | symbol, timeout?: number): Promise<any>;
 }

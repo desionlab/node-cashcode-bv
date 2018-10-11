@@ -921,6 +921,9 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="_task_.task.html#done" class="tsd-kind-icon">done</a>
 				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="_task_.task.html#timeout" class="tsd-kind-icon">timeout</a>
+				</li>
 			</ul>
 		</li>
 		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
@@ -966,6 +969,7 @@ img { max-width: 100%; }
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_task_.task.html#data" class="tsd-kind-icon">data</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_task_.task.html#done" class="tsd-kind-icon">done</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_task_.task.html#timeout" class="tsd-kind-icon">timeout</a></li>
 						</ul>
 					</section>
 				</div>
@@ -977,13 +981,13 @@ img { max-width: 100%; }
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Task<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span>, done<span class="tsd-signature-symbol">: </span><a href="../modules/_task_.html#ontaskdone" class="tsd-signature-type">OnTaskDone</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_task_.task.html" class="tsd-signature-type">Task</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Task<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span>, done<span class="tsd-signature-symbol">: </span><a href="../modules/_task_.html#ontaskdone" class="tsd-signature-type">OnTaskDone</a>, timeout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_task_.task.html" class="tsd-signature-type">Task</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Task.ts#L37">Task.ts:37</a></li>
+								<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Task.ts#L42">Task.ts:42</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1004,6 +1008,14 @@ img { max-width: 100%; }
 									</div>
 								</div>
 							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> timeout: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1000</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>The maximum time to complete this task.</p>
+									</div>
+								</div>
+							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_task_.task.html" class="tsd-signature-type">Task</a></h4>
 					</li>
@@ -1018,7 +1030,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Task.ts#L32">Task.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Task.ts#L32">Task.ts:32</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1033,12 +1045,27 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">done<span class="tsd-signature-symbol">:</span> <a href="../modules/_task_.html#ontaskdone" class="tsd-signature-type">OnTaskDone</a><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/a7fa540/src/Task.ts#L37">Task.ts:37</a></li>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Task.ts#L37">Task.ts:37</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>Event of the device command execution.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="timeout" class="tsd-anchor"></a>
+				<h3>timeout</h3>
+				<div class="tsd-signature tsd-kind-icon">timeout<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1000</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/desionlab/node-cashcode-bv/blob/0678ee1/src/Task.ts#L42">Task.ts:42</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The maximum time to complete this task.</p>
 					</div>
 				</div>
 			</section>
