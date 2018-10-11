@@ -369,10 +369,6 @@ class Device extends events_1.EventEmitter {
                 }, 1000));
             }
         }
-        /* Write debug info. */
-        if (this.logger) {
-            this.logger.debug('Queue length:', this.queue.length);
-        }
     }
     /* ----------------------------------------------------------------------- */
     /**
