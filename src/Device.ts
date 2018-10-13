@@ -17,6 +17,51 @@ import { Exception } from './Exception';
 import { getCRC16 } from './Utils';
 
 /**
+ * 
+ */
+export const enum DeviceStatus {
+  POWER_UP,
+  POWER_UP_WITH_BILL_IN_VALIDATOR,
+  POWER_UP_WITH_BILL_IN_STACKER,
+  /* ----------------------------------------------------------------------- */
+  INITIALIZE,
+  IDLING,
+  ACCEPTING,
+  STACKING,
+  RETURNING,
+  UNIT_DISABLED,
+  HOLDING,
+  DEVICE_BUSY,
+  /* ----------------------------------------------------------------------- */
+
+  /* ----------------------------------------------------------------------- */
+  DROP_CASSETTE_FULL,
+  DROP_CASSETTE_OUT_OF_POSITION,
+  VALIDATOR_JAMMED,
+  DROP_CASSETTE_JAMMED,
+  CHEATED,
+  PAUSE,
+  /* ----------------------------------------------------------------------- */
+  STACK_MOTOR_FAILURE,
+  TRANSPORT_MOTOR_SPEED_FAILURE,
+  TRANSPORT_MOTOR_FAILURE,
+  ALIGNING_MOTOR_FAILURE,
+  INITIAL_CASSETTE_STATUS_FAILURE,
+  OPTIC_CANAL_FAILURE,
+  MAGNETIC_CANAL_FAILURE,
+  CAPACITANCE_CANAL_FAILURE,
+  /* ----------------------------------------------------------------------- */
+  ESCROW_POSITION,
+  BILL_STACKED,
+  BILL_RETURNED
+};
+
+/**
+ * 
+ */
+export const enum DeviceStatusMessage {};
+
+/**
  * Class Device
  * 
  * The object implements the main methods and events for working 
