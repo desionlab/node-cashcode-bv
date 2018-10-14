@@ -181,7 +181,7 @@ export class Device extends EventEmitter {
       await this.reset();
 
       /*  */
-      //await this.asyncOnce('initialize');
+      await this.asyncOnce(DeviceStatus.INITIALIZE);
 
       /*  */
       await this.execute((new Commands.Identification()));
@@ -330,7 +330,13 @@ export class Device extends EventEmitter {
    * 
    * @param status Current devise status.
    */
-  protected onStatus (status: Buffer) {}
+  protected onStatus (status: Buffer) {
+    if (status.length >= 2) {
+
+    } else {
+      
+    }
+  }
 
   /**
    * Operating timer event.

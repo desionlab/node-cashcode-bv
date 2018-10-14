@@ -24,6 +24,7 @@ const Parser_1 = require("./Parser");
 const events_1 = require("events");
 const Exception_1 = require("./Exception");
 const Utils_1 = require("./Utils");
+const Const_1 = require("./Const");
 /**
  * Class Device
  *
@@ -149,7 +150,7 @@ class Device extends events_1.EventEmitter {
             /*  */
             await this.reset();
             /*  */
-            //await this.asyncOnce('initialize');
+            await this.asyncOnce(Const_1.DeviceStatus.INITIALIZE);
             /*  */
             await this.execute((new Commands.Identification()));
             /*  */
@@ -278,7 +279,12 @@ class Device extends events_1.EventEmitter {
      *
      * @param status Current devise status.
      */
-    onStatus(status) { }
+    onStatus(status) {
+        if (status.length >= 2) {
+        }
+        else {
+        }
+    }
     /**
      * Operating timer event.
      */
