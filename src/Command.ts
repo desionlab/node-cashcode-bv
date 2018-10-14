@@ -6,7 +6,7 @@
  * @license   MIT
  */
 
-import * as CCNet from './Const/CCNet';
+import * as CCNet from './Const';
 import { getCRC16 } from './Utils';
 
 /**

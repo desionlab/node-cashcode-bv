@@ -13,14 +13,12 @@ describe("CashCode BV", () => {
 
   describe('Const', () => {
 
-    it("CCNet", () => {
-      expect(CashCode.CCNet.SYNC).to.equal(2);
-      expect(CashCode.CCNet.CRC_POLY).to.equal(33800);
-      expect(CashCode.CCNet.ADR_BILL_TO_BILL).to.equal(1);
-      expect(CashCode.CCNet.ADR_COIN_CHANGER).to.equal(2);
-      expect(CashCode.CCNet.ADR_BILL_VALIDATOR).to.equal(3);
-      expect(CashCode.CCNet.ADR_CARD_READER).to.equal(4);
-    });
+    expect(CashCode.SYNC).to.equal(2);
+    expect(CashCode.CRC_POLY).to.equal(33800);
+    expect(CashCode.ADR_BILL_TO_BILL).to.equal(1);
+    expect(CashCode.ADR_COIN_CHANGER).to.equal(2);
+    expect(CashCode.ADR_BILL_VALIDATOR).to.equal(3);
+    expect(CashCode.ADR_CARD_READER).to.equal(4);
 
   });
 

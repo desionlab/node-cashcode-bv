@@ -14,7 +14,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const CCNet = __importStar(require("./Const/CCNet"));
+const CCNet = __importStar(require("./Const"));
 const Utils_1 = require("./Utils");
 /**
  * Class Command

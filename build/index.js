@@ -17,11 +17,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const CCNet = __importStar(require("./Const/CCNet"));
-exports.CCNet = CCNet;
 const Commands = __importStar(require("./Commands"));
 exports.Commands = Commands;
 __export(require("./Command"));
+__export(require("./Const"));
 __export(require("./Device"));
 __export(require("./Exception"));
 __export(require("./Parser"));

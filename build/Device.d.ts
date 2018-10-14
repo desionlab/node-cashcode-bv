@@ -11,6 +11,7 @@ import { Command } from './Command';
 import { Task } from './Task';
 import { Parser } from './Parser';
 import { EventEmitter } from 'events';
+import { DeviceStatus } from './Const';
 /**
  * Class Device
  *
@@ -45,7 +46,7 @@ export declare class Device extends EventEmitter {
     /**
      * Main status code.
      */
-    protected status: number;
+    protected status: DeviceStatus;
     /**
      * A flag indicating the current command execution.
      */

@@ -6,7 +6,7 @@
  * @license   MIT
  */
 
-import { CRC_POLY } from './Const/CCNet';
+import { CRC_POLY } from './Const';
 
 /**
  * Calculation packet checksum.

@@ -7,7 +7,7 @@
  * @license   MIT
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const CCNet_1 = require("./Const/CCNet");
+const Const_1 = require("./Const");
 /**
  * Calculation packet checksum.
  *
@@ -22,7 +22,7 @@ function getCRC16(buffer) {
         for (j = 0; j < 8; j++) {
             if (CRC & 0x0001) {
                 CRC >>= 1;
-                CRC ^= CCNet_1.CRC_POLY;
+                CRC ^= Const_1.CRC_POLY;
             }
             else
                 CRC >>= 1;
