@@ -181,8 +181,8 @@ export class Device extends EventEmitter {
       await this.reset();
 
       /*  */
-      await this.asyncOnce(DeviceStatus.INITIALIZE);
-
+      await this.asyncOnce(String(DeviceStatus.INITIALIZE), 1000);
+      
       /*  */
       await this.execute((new Commands.Identification()));
 
@@ -198,6 +198,10 @@ export class Device extends EventEmitter {
       /*  */
       return true;
     } catch (error) {
+      /*  */
+      await this.disconnect();
+      
+      /*  */
       throw error;
     }
   }
@@ -216,8 +220,8 @@ export class Device extends EventEmitter {
   /**
    * Reset the device to its original state.
    */
-  public async reset () : Promise<any> {
-    return await this.execute((new Commands.Reset()));
+  public reset () : Promise<any> {
+    return this.execute((new Commands.Reset()));
   }
 
   /**
@@ -254,6 +258,69 @@ export class Device extends EventEmitter {
    * 
    */
   public async endEscrow () : Promise<any> {}
+
+  /* ----------------------------------------------------------------------- */
+  
+  /**
+   * Execute the specified command.
+   * 
+   * @param command Target command.
+   * @param params Execute parameters.
+   * @param timeout The maximum time to complete this action.
+   */
+  public execute (command: Command, params: any = [], timeout: number = 1000) : Promise<any> {
+    return new Promise((resolve, reject) => {
+      let task = new Task(command.request(params), (error, data) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(command.response(data));
+      }, timeout);
+
+      this.queue.push(task);
+    });
+  }
+
+  /**
+   * Synchronization of internal events with the execution queue.
+   * 
+   * @param event Internal event name.
+   * @param timeout Maximum waiting time for an internal event.
+   */
+  public asyncOnce (event: string | symbol, timeout: number = 1000) : Promise<any> {
+    return new Promise((resolve, reject) => {
+      let timeoutCounter: number = 0;
+
+      let timeoutHandler = () => {
+        setImmediate(() => {
+          timeoutCounter += this.timerMs;
+
+          if (timeoutCounter >= timeout) {
+            this.removeListener(event, handler);
+            this.removeListener('tick', timeoutHandler);
+            reject(new Exception(10, 'Request timeout.'));
+          }
+        });
+      };
+
+      let handler = () => {
+        if (timeout) {
+          this.removeListener('tick', timeoutHandler);
+        }
+
+        this.removeListener(event, handler);
+
+        resolve(true);
+      };
+      
+      this.once(event, handler);
+
+      if (timeout) {
+        this.on('tick', timeoutHandler);
+      }
+    });
+  }
 
   /* ----------------------------------------------------------------------- */
 
@@ -325,16 +392,69 @@ export class Device extends EventEmitter {
     clearInterval(this.timerInterval);
   }
   
+  /* ----------------------------------------------------------------------- */
+  
   /**
    * All status events handler.
    * 
    * @param status Current devise status.
    */
   protected onStatus (status: Buffer) {
-    if (status.length >= 2) {
+    let newStatus: number = null;
 
+    /* Determine the new status. */
+    if (status.length >= 2) {
+      switch (parseInt(status[0].toString(10))) {
+        case DeviceStatus.DEVICE_BUSY:
+        case DeviceStatus.ESCROW_POSITION:
+        case DeviceStatus.BILL_STACKED:
+        case DeviceStatus.BILL_RETURNED:
+          newStatus = parseInt(status[0].toString(10));
+        break;
+        default:
+          newStatus = parseInt(status[0].toString(10)+status[1].toString(10));
+        break;
+      }
     } else {
-      
+      newStatus = parseInt(status[0].toString(10));
+    }
+
+    /*  */
+    if (newStatus) {
+      if (newStatus !== this.status) {
+        /*  */
+        this.status = newStatus;
+
+        /*  */
+        this.emit(
+          'status',
+          this.status,
+          DeviceStatusMessage.get(this.status),
+          DeviceStatusDescription.get(this.status)
+        );
+
+        /*  */
+        switch (newStatus) {
+          case DeviceStatus.DEVICE_BUSY:
+
+          break;
+          case DeviceStatus.ESCROW_POSITION:
+          case DeviceStatus.BILL_STACKED:
+          case DeviceStatus.BILL_RETURNED:
+            
+          break;
+          default:
+            /*  */
+            this.emit(
+              String(this.status),
+              DeviceStatusMessage.get(this.status),
+              DeviceStatusDescription.get(this.status)
+            );
+          break;
+        }
+      }
+    } else {
+      /* Status not recognized. */
     }
   }
 
@@ -447,64 +567,6 @@ export class Device extends EventEmitter {
         }, 1000));
       }
     }
-  }
-
-  /* ----------------------------------------------------------------------- */
-  
-  /**
-   * Execute the specified command.
-   * 
-   * @param command Target command.
-   * @param params Execute parameters.
-   * @param timeout The maximum time to complete this action.
-   */
-  public async execute (command: Command, params: any = [], timeout: number = 1000) : Promise<any> {
-    return new Promise((resolve, reject) => {
-      let task = new Task(command.request(params), (error, data) => {
-        if (error) {
-          reject(error);
-        }
-
-        resolve(command.response(data));
-      }, timeout);
-
-      this.queue.push(task);
-    });
-  }
-
-  /**
-   * Synchronization of internal events with the execution queue.
-   * 
-   * @param event Internal event name.
-   * @param timeout Maximum waiting time for an internal event.
-   */
-  public async asyncOnce (event: string | symbol, timeout: number = 1000) : Promise<any> {
-    return new Promise((resolve, reject) => {
-      let timeoutCounter: number = 0;
-
-      let timeoutHandler = () => {
-        setImmediate(() => {
-          timeoutCounter += this.timerMs;
-
-          if (timeoutCounter >= timeout) {
-            this.removeListener('tick', timeoutHandler);
-            reject();
-          }
-        });
-      };
-
-      this.once(event, () => {
-        if (timeout) {
-          this.removeListener('tick', timeoutHandler);
-        }
-
-        resolve();
-      });
-
-      if (timeout) {
-        this.on('tick', timeoutHandler);
-      }
-    });
   }
 
 }

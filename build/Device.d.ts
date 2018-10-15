@@ -120,6 +120,21 @@ export declare class Device extends EventEmitter {
      */
     endEscrow(): Promise<any>;
     /**
+     * Execute the specified command.
+     *
+     * @param command Target command.
+     * @param params Execute parameters.
+     * @param timeout The maximum time to complete this action.
+     */
+    execute(command: Command, params?: any, timeout?: number): Promise<any>;
+    /**
+     * Synchronization of internal events with the execution queue.
+     *
+     * @param event Internal event name.
+     * @param timeout Maximum waiting time for an internal event.
+     */
+    asyncOnce(event: string | symbol, timeout?: number): Promise<any>;
+    /**
      * Open serialport.
      */
     protected open(): Promise<any>;
@@ -151,19 +166,4 @@ export declare class Device extends EventEmitter {
      * Operating timer event.
      */
     protected onTick(): void;
-    /**
-     * Execute the specified command.
-     *
-     * @param command Target command.
-     * @param params Execute parameters.
-     * @param timeout The maximum time to complete this action.
-     */
-    execute(command: Command, params?: any, timeout?: number): Promise<any>;
-    /**
-     * Synchronization of internal events with the execution queue.
-     *
-     * @param event Internal event name.
-     * @param timeout Maximum waiting time for an internal event.
-     */
-    asyncOnce(event: string | symbol, timeout?: number): Promise<any>;
 }
