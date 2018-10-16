@@ -11,6 +11,7 @@ import { Command } from './Command';
 import { Task } from './Task';
 import { Parser } from './Parser';
 import { EventEmitter } from 'events';
+import { DeviceInfo } from './DeviceInfo';
 import { DeviceStatus } from './Const';
 /**
  * Class Device
@@ -44,7 +45,11 @@ export declare class Device extends EventEmitter {
      */
     protected parser: Parser;
     /**
-     * Main status code.
+     * Device information.
+     */
+    protected info: DeviceInfo;
+    /**
+     * Status code.
      */
     protected status: DeviceStatus;
     /**
@@ -94,7 +99,7 @@ export declare class Device extends EventEmitter {
     /**
      *
      */
-    getInfo(): Promise<any>;
+    getInfo(): Promise<DeviceInfo>;
     /**
      *
      */

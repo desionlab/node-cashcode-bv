@@ -24,6 +24,7 @@ const Parser_1 = require("./Parser");
 const events_1 = require("events");
 const Exception_1 = require("./Exception");
 const Utils_1 = require("./Utils");
+const DeviceInfo_1 = require("./DeviceInfo");
 const Const_1 = require("./Const");
 /**
  * Class Device
@@ -75,7 +76,11 @@ class Device extends events_1.EventEmitter {
         this.parser = null;
         /* ----------------------------------------------------------------------- */
         /**
-         * Main status code.
+         * Device information.
+         */
+        this.info = null;
+        /**
+         * Status code.
          */
         this.status = null;
         /**
@@ -152,11 +157,9 @@ class Device extends events_1.EventEmitter {
             /*  */
             await this.asyncOnce(String(Const_1.DeviceStatus.INITIALIZE), 1000);
             /*  */
-            await this.execute((new Commands.Identification()));
+            await this.getInfo();
             /*  */
             await this.execute((new Commands.GetBillTable()));
-            /*  */
-            await this.execute((new Commands.GetCRC32OfTheCode()));
             /*  */
             this.emit('connect');
             /*  */
@@ -175,6 +178,7 @@ class Device extends events_1.EventEmitter {
     async disconnect() {
         try {
             await this.close();
+            return true;
         }
         catch (error) {
             throw error;
@@ -183,13 +187,18 @@ class Device extends events_1.EventEmitter {
     /**
      * Reset the device to its original state.
      */
-    reset() {
-        return this.execute((new Commands.Reset()));
+    async reset() {
+        return await this.execute((new Commands.Reset()));
     }
     /**
      *
      */
-    async getInfo() { }
+    async getInfo() {
+        if (!this.info) {
+            this.info = new DeviceInfo_1.DeviceInfo(await this.execute((new Commands.Identification())), await this.execute((new Commands.GetCRC32OfTheCode())));
+        }
+        return this.info;
+    }
     /**
      *
      */

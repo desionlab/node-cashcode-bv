@@ -10,6 +10,7 @@ export { Commands };
 export * from './Command';
 export * from './Const';
 export * from './Device';
+export * from './DeviceInfo';
 export * from './Exception';
 export * from './Parser';
 export * from './Task';

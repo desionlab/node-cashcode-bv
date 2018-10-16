@@ -14,6 +14,7 @@ import { Parser } from './Parser';
 import { EventEmitter } from 'events';
 import { Exception } from './Exception';
 import { getCRC16 } from './Utils';
+import { DeviceInfo } from './DeviceInfo';
 import {
   DeviceStatus,
   DeviceStatusMessage,
@@ -68,7 +69,12 @@ export class Device extends EventEmitter {
   /* ----------------------------------------------------------------------- */
   
   /**
-   * Main status code.
+   * Device information.
+   */
+  protected info: DeviceInfo = null;
+
+  /**
+   * Status code.
    */
   protected status: DeviceStatus = null;
 
@@ -184,13 +190,10 @@ export class Device extends EventEmitter {
       await this.asyncOnce(String(DeviceStatus.INITIALIZE), 1000);
       
       /*  */
-      await this.execute((new Commands.Identification()));
+      await this.getInfo();
 
       /*  */
       await this.execute((new Commands.GetBillTable()));
-
-      /*  */
-      await this.execute((new Commands.GetCRC32OfTheCode()));
 
       /*  */
       this.emit('connect');
@@ -211,7 +214,8 @@ export class Device extends EventEmitter {
    */
   public async disconnect () : Promise<any> {
     try {
-      await this.close(); 
+      await this.close();
+      return true;
     } catch (error) {
       throw error;
     }
@@ -220,14 +224,23 @@ export class Device extends EventEmitter {
   /**
    * Reset the device to its original state.
    */
-  public reset () : Promise<any> {
-    return this.execute((new Commands.Reset()));
+  public async reset () : Promise<any> {
+    return await this.execute((new Commands.Reset()));
   }
 
   /**
    * 
    */
-  public async getInfo () : Promise<any> {}
+  public async getInfo () : Promise<DeviceInfo> {
+    if (!this.info) {
+      this.info = new DeviceInfo(
+        await this.execute((new Commands.Identification())),
+        await this.execute((new Commands.GetCRC32OfTheCode()))
+      );
+    }
+
+    return this.info;
+  }
 
   /**
    * 

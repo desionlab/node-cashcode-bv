@@ -22,6 +22,7 @@ exports.Commands = Commands;
 __export(require("./Command"));
 __export(require("./Const"));
 __export(require("./Device"));
+__export(require("./DeviceInfo"));
 __export(require("./Exception"));
 __export(require("./Parser"));
 __export(require("./Task"));
