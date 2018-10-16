@@ -118,6 +118,20 @@ class Device extends events_1.EventEmitter {
                 this.onTick();
             });
         });
+        /*  */
+        this.on(String(Const_1.DeviceStatus.UNIT_DISABLED), () => {
+            setImmediate(() => {
+                this.timerMs = 500;
+                this.startTimer();
+            });
+        });
+        /*  */
+        this.on(String(Const_1.DeviceStatus.ESCROW_POSITION), () => {
+            setImmediate(() => {
+                this.timerMs = 100;
+                this.startTimer();
+            });
+        });
         /* --------------------------------------------------------------------- */
         /* Create serialport transport. */
         this.serial = new serialport_1.default(this.port, this.options, null);
@@ -311,15 +325,26 @@ class Device extends events_1.EventEmitter {
             }
         });
     }
+    /**
+     * Start / Restart operating timer.
+     */
+    startTimer() {
+        /* Clear operating timer. */
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
+        /* Start operating timer. */
+        this.timerInterval = setInterval(() => {
+            this.emit('tick');
+        }, this.timerMs);
+    }
     /* ----------------------------------------------------------------------- */
     /**
      * On serial open event.
      */
     onSerialPortOpen() {
         /* Start operating timer. */
-        this.timerInterval = setInterval(() => {
-            this.emit('tick');
-        }, this.timerMs);
+        this.startTimer();
     }
     /**
      * On serial error event.

@@ -87,11 +87,11 @@ export declare class Device extends EventEmitter {
     /**
      * Connect to device.
      */
-    connect(): Promise<any>;
+    connect(): Promise<boolean>;
     /**
      * Disconnect from device.
      */
-    disconnect(): Promise<any>;
+    disconnect(): Promise<boolean>;
     /**
      * Reset the device to its original state.
      */
@@ -147,6 +147,10 @@ export declare class Device extends EventEmitter {
      * Close serialport.
      */
     protected close(): Promise<any>;
+    /**
+     * Start / Restart operating timer.
+     */
+    protected startTimer(): void;
     /**
      * On serial open event.
      */

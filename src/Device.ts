@@ -136,6 +136,22 @@ export class Device extends EventEmitter {
       });
     });
 
+    /*  */
+    this.on(String(DeviceStatus.UNIT_DISABLED), () => {
+      setImmediate(() => {
+        this.timerMs = 500;
+        this.startTimer();
+      });
+    });
+
+    /*  */
+    this.on(String(DeviceStatus.ESCROW_POSITION), () => {
+      setImmediate(() => {
+        this.timerMs = 100;
+        this.startTimer();
+      });
+    });
+
     /* --------------------------------------------------------------------- */
 
     /* Create serialport transport. */
@@ -178,7 +194,7 @@ export class Device extends EventEmitter {
   /**
    * Connect to device.
    */
-  public async connect () : Promise<any> {
+  public async connect () : Promise<boolean> {
     try {
       /*  */
       await this.open();
@@ -212,7 +228,7 @@ export class Device extends EventEmitter {
   /**
    * Disconnect from device.
    */
-  public async disconnect () : Promise<any> {
+  public async disconnect () : Promise<boolean> {
     try {
       await this.close();
       return true;
@@ -375,6 +391,21 @@ export class Device extends EventEmitter {
     });
   }
 
+  /**
+   * Start / Restart operating timer.
+   */
+  protected startTimer () : void {
+    /* Clear operating timer. */
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+
+    /* Start operating timer. */
+    this.timerInterval = setInterval(() => {
+      this.emit('tick');
+    }, this.timerMs);
+  }
+
   /* ----------------------------------------------------------------------- */
   
   /**
@@ -382,9 +413,7 @@ export class Device extends EventEmitter {
    */
   protected onSerialPortOpen () {
     /* Start operating timer. */
-    this.timerInterval = setInterval(() => {
-      this.emit('tick');
-    }, this.timerMs);
+    this.startTimer();
   }
 
   /**
