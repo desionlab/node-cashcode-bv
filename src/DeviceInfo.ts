@@ -38,7 +38,8 @@ export class DeviceInfo {
   /**
    * DeviceInfo constructor.
    * 
-   * @param info Raw data from the device.
+   * @param info Raw info from the device.
+   * @param crc Raw crc from the device.
    */
   public constructor (info: Buffer, crc: Buffer) {
     /* Pars info data. */

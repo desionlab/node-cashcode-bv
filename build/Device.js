@@ -25,6 +25,7 @@ const events_1 = require("events");
 const Exception_1 = require("./Exception");
 const Utils_1 = require("./Utils");
 const DeviceInfo_1 = require("./DeviceInfo");
+const BillInfo_1 = require("./BillInfo");
 const Const_1 = require("./Const");
 /**
  * Class Device
@@ -79,6 +80,10 @@ class Device extends events_1.EventEmitter {
          * Device information.
          */
         this.info = null;
+        /**
+         * List of supported bills.
+         */
+        this.billTable = [];
         /**
          * Status code.
          */
@@ -164,23 +169,23 @@ class Device extends events_1.EventEmitter {
      */
     async connect() {
         try {
-            /*  */
+            /* Open serial port. */
             await this.open();
-            /*  */
+            /* Reset device. */
             await this.reset();
-            /*  */
+            /* Wait device initialize. */
             await this.asyncOnce(String(Const_1.DeviceStatus.INITIALIZE), 1000);
-            /*  */
+            /* Get main info of the device. */
             await this.getInfo();
-            /*  */
-            await this.execute((new Commands.GetBillTable()));
-            /*  */
+            /* Get list of supported bills. */
+            await this.getBillTable();
+            /* Fire ready connect event. */
             this.emit('connect');
             /*  */
             return true;
         }
         catch (error) {
-            /*  */
+            /* Disconnect from device. */
             await this.disconnect();
             /*  */
             throw error;
@@ -205,7 +210,7 @@ class Device extends events_1.EventEmitter {
         return await this.execute((new Commands.Reset()));
     }
     /**
-     *
+     * Get main info of the device.
      */
     async getInfo() {
         if (!this.info) {
@@ -214,9 +219,18 @@ class Device extends events_1.EventEmitter {
         return this.info;
     }
     /**
-     *
+     * Get list of supported bills.
      */
-    async getBillTable() { }
+    async getBillTable() {
+        if (!this.billTable.length) {
+            let data = await this.execute((new Commands.GetBillTable()));
+            for (var i = 0; i < 24; i++) {
+                let section = data.slice(i * 5, (i * 5 + 5));
+                this.billTable.push((new BillInfo_1.BillInfo(section)));
+            }
+        }
+        return this.billTable;
+    }
     /**
      *
      */

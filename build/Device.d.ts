@@ -12,6 +12,7 @@ import { Task } from './Task';
 import { Parser } from './Parser';
 import { EventEmitter } from 'events';
 import { DeviceInfo } from './DeviceInfo';
+import { BillInfo } from './BillInfo';
 import { DeviceStatus } from './Const';
 /**
  * Class Device
@@ -48,6 +49,10 @@ export declare class Device extends EventEmitter {
      * Device information.
      */
     protected info: DeviceInfo;
+    /**
+     * List of supported bills.
+     */
+    protected billTable: Array<BillInfo>;
     /**
      * Status code.
      */
@@ -97,11 +102,11 @@ export declare class Device extends EventEmitter {
      */
     reset(): Promise<any>;
     /**
-     *
+     * Get main info of the device.
      */
     getInfo(): Promise<DeviceInfo>;
     /**
-     *
+     * Get list of supported bills.
      */
     getBillTable(): Promise<any>;
     /**

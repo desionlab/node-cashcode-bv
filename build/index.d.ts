@@ -7,6 +7,7 @@
  */
 import * as Commands from './Commands';
 export { Commands };
+export * from './BillInfo';
 export * from './Command';
 export * from './Const';
 export * from './Device';

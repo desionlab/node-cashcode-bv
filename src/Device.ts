@@ -15,6 +15,7 @@ import { EventEmitter } from 'events';
 import { Exception } from './Exception';
 import { getCRC16 } from './Utils';
 import { DeviceInfo } from './DeviceInfo';
+import { BillInfo } from './BillInfo';
 import {
   DeviceStatus,
   DeviceStatusMessage,
@@ -72,6 +73,11 @@ export class Device extends EventEmitter {
    * Device information.
    */
   protected info: DeviceInfo = null;
+
+  /**
+   * List of supported bills.
+   */
+  protected billTable: Array<BillInfo> = [];
 
   /**
    * Status code.
@@ -196,28 +202,28 @@ export class Device extends EventEmitter {
    */
   public async connect () : Promise<boolean> {
     try {
-      /*  */
+      /* Open serial port. */
       await this.open();
 
-      /*  */
+      /* Reset device. */
       await this.reset();
 
-      /*  */
+      /* Wait device initialize. */
       await this.asyncOnce(String(DeviceStatus.INITIALIZE), 1000);
       
-      /*  */
+      /* Get main info of the device. */
       await this.getInfo();
 
-      /*  */
-      await this.execute((new Commands.GetBillTable()));
+      /* Get list of supported bills. */
+      await this.getBillTable();
 
-      /*  */
+      /* Fire ready connect event. */
       this.emit('connect');
       
       /*  */
       return true;
     } catch (error) {
-      /*  */
+      /* Disconnect from device. */
       await this.disconnect();
       
       /*  */
@@ -245,7 +251,7 @@ export class Device extends EventEmitter {
   }
 
   /**
-   * 
+   * Get main info of the device.
    */
   public async getInfo () : Promise<DeviceInfo> {
     if (!this.info) {
@@ -259,9 +265,19 @@ export class Device extends EventEmitter {
   }
 
   /**
-   * 
+   * Get list of supported bills.
    */
-  public async getBillTable () : Promise<any> {}
+  public async getBillTable () : Promise<any> {
+    if (!this.billTable.length) {
+      let data = await this.execute((new Commands.GetBillTable()));
+      for (var i = 0; i < 24; i++) {
+        let section = data.slice(i * 5, (i * 5 + 5));
+        this.billTable.push((new BillInfo(section)));
+      }
+    }
+
+    return this.billTable;
+  }
 
   /**
    * 
