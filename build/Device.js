@@ -174,11 +174,24 @@ class Device extends events_1.EventEmitter {
             /* Reset device. */
             await this.reset();
             /* Wait device initialize. */
-            await this.asyncOnce(String(Const_1.DeviceStatus.INITIALIZE), 1000);
+            await this.asyncOnce(String(Const_1.DeviceStatus.INITIALIZE), 2500);
             /* Get main info of the device. */
             await this.getInfo();
             /* Get list of supported bills. */
             await this.getBillTable();
+            /*  */
+            await this.beginEscrow();
+            /*  */
+            await this.asyncOnce(String(Const_1.DeviceStatus.IDLING), 2500);
+            /*  */
+            let status = await this.getStatus();
+            /*  */
+            await this.endEscrow();
+            /*  */
+            for (let i = 0; i < this.billTable.length; i++) {
+                this.billTable[i].enabled = status.enabled[i];
+                this.billTable[i].security = status.security[i];
+            }
             /* Fire ready connect event. */
             this.emit('connect');
             /*  */
@@ -207,50 +220,142 @@ class Device extends events_1.EventEmitter {
      * Reset the device to its original state.
      */
     async reset() {
-        return await this.execute((new Commands.Reset()));
+        try {
+            await this.execute((new Commands.Reset()));
+            return true;
+        }
+        catch (error) {
+            throw error;
+        }
     }
     /**
      * Get main info of the device.
      */
     async getInfo() {
-        if (!this.info) {
-            this.info = new DeviceInfo_1.DeviceInfo(await this.execute((new Commands.Identification())), await this.execute((new Commands.GetCRC32OfTheCode())));
+        try {
+            if (!this.info) {
+                this.info = new DeviceInfo_1.DeviceInfo(await this.execute((new Commands.Identification())), await this.execute((new Commands.GetCRC32OfTheCode())));
+            }
+            return this.info;
         }
-        return this.info;
+        catch (error) {
+            throw error;
+        }
     }
     /**
      * Get list of supported bills.
      */
     async getBillTable() {
-        if (!this.billTable.length) {
-            let data = await this.execute((new Commands.GetBillTable()));
-            for (var i = 0; i < 24; i++) {
-                let section = data.slice(i * 5, (i * 5 + 5));
-                this.billTable.push((new BillInfo_1.BillInfo(section)));
+        try {
+            if (!this.billTable.length) {
+                let billTable = await this.execute((new Commands.GetBillTable()));
+                for (var i = 0; i < 24; i++) {
+                    let section = billTable.slice(i * 5, (i * 5 + 5));
+                    this.billTable.push((new BillInfo_1.BillInfo(section)));
+                }
             }
+            return this.billTable;
         }
-        return this.billTable;
+        catch (error) {
+            throw error;
+        }
     }
     /**
      *
      */
-    async beginEscrow() { }
+    async getStatus() {
+        try {
+            let status = await this.execute((new Commands.GetStatus()));
+            let enabled = Utils_1.Array8Bit
+                .fromBuffer(status.slice(0, 3))
+                .toArray()
+                .reverse();
+            let security = Utils_1.Array8Bit
+                .fromBuffer(status.slice(3, 6))
+                .toArray()
+                .reverse();
+            return {
+                enabled,
+                security
+            };
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     /**
      *
      */
-    async billHold() { }
+    async beginEscrow() {
+        /*  */
+        let securityList = [];
+        let enabledList = [];
+        let escrowList = [];
+        /*  */
+        this.billTable.forEach(element => {
+            securityList.push(element.security);
+            enabledList.push(element.enabled);
+            escrowList.push(element.escrow);
+        });
+        try {
+            /*  */
+            //await this.execute(
+            //  (new Commands.SetSecurity()),
+            //  Array8Bit.fromArray(securityList).toBuffer()
+            //);
+            /*  */
+            await this.execute((new Commands.EnableBillTypes()), Buffer.concat([
+                Utils_1.Array8Bit.fromArray(enabledList.reverse()).toBuffer(),
+                Utils_1.Array8Bit.fromArray(escrowList.reverse()).toBuffer()
+            ]));
+            return true;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     /**
      *
      */
-    async billStack() { }
+    async billHold() {
+        try {
+            await this.execute((new Commands.Hold()));
+            return true;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     /**
      *
      */
-    async billReturn() { }
+    async billStack() {
+        try {
+            await this.execute((new Commands.Stack()));
+            return true;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     /**
      *
      */
-    async endEscrow() { }
+    async billReturn() {
+        try {
+            await this.execute((new Commands.Return()));
+            return true;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    /**
+     *
+     */
+    async endEscrow() {
+        return await this.execute((new Commands.EnableBillTypes()), [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+    }
     /* ----------------------------------------------------------------------- */
     /**
      * Execute the specified command.
@@ -383,6 +488,7 @@ class Device extends events_1.EventEmitter {
      * @param status Current devise status.
      */
     onStatus(status) {
+        /* New status container. */
         let newStatus = null;
         /* Determine the new status. */
         if (status.length >= 2) {
@@ -401,23 +507,24 @@ class Device extends events_1.EventEmitter {
         else {
             newStatus = parseInt(status[0].toString(10));
         }
-        /*  */
+        /* Check new status. */
         if (newStatus) {
             if (newStatus !== this.status) {
-                /*  */
+                /* Set new status. */
                 this.status = newStatus;
-                /*  */
+                /* Call a shared event for all device states. */
                 this.emit('status', this.status, Const_1.DeviceStatusMessage.get(this.status), Const_1.DeviceStatusDescription.get(this.status));
-                /*  */
+                /* Event call by type and purpose. */
                 switch (newStatus) {
                     case Const_1.DeviceStatus.DEVICE_BUSY:
+                        this.emit(String(this.status), parseInt(status[1].toString(10)));
                         break;
                     case Const_1.DeviceStatus.ESCROW_POSITION:
                     case Const_1.DeviceStatus.BILL_STACKED:
                     case Const_1.DeviceStatus.BILL_RETURNED:
+                        this.emit(String(this.status), this.billTable[parseInt(status[1].toString(10))]);
                         break;
                     default:
-                        /*  */
                         this.emit(String(this.status), Const_1.DeviceStatusMessage.get(this.status), Const_1.DeviceStatusDescription.get(this.status));
                         break;
                 }

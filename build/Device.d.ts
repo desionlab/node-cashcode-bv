@@ -100,7 +100,7 @@ export declare class Device extends EventEmitter {
     /**
      * Reset the device to its original state.
      */
-    reset(): Promise<any>;
+    reset(): Promise<boolean>;
     /**
      * Get main info of the device.
      */
@@ -108,23 +108,27 @@ export declare class Device extends EventEmitter {
     /**
      * Get list of supported bills.
      */
-    getBillTable(): Promise<any>;
+    getBillTable(): Promise<Array<BillInfo>>;
     /**
      *
      */
-    beginEscrow(): Promise<any>;
+    getStatus(): Promise<any>;
     /**
      *
      */
-    billHold(): Promise<any>;
+    beginEscrow(): Promise<boolean>;
     /**
      *
      */
-    billStack(): Promise<any>;
+    billHold(): Promise<boolean>;
     /**
      *
      */
-    billReturn(): Promise<any>;
+    billStack(): Promise<boolean>;
+    /**
+     *
+     */
+    billReturn(): Promise<boolean>;
     /**
      *
      */
@@ -147,11 +151,11 @@ export declare class Device extends EventEmitter {
     /**
      * Open serialport.
      */
-    protected open(): Promise<any>;
+    protected open(): Promise<boolean>;
     /**
      * Close serialport.
      */
-    protected close(): Promise<any>;
+    protected close(): Promise<boolean>;
     /**
      * Start / Restart operating timer.
      */

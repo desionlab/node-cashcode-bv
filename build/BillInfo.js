@@ -36,13 +36,20 @@ class BillInfo {
         /**
          * Allowed to receive.
          */
-        this.enabled = false;
+        this.enabled = true;
+        /**
+         * Allowed to receive.
+         */
+        this.escrow = true;
         if (data) {
             this.amount = data[0] * Math.pow(10, data[4]);
             this.code = data.toString('ascii', 1, 4).trim();
             /* Clear not used item. */
             if (this.code == "\u0000\u0000\u0000") {
                 this.code = '';
+                this.security = false;
+                this.enabled = false;
+                this.escrow = false;
             }
         }
     }

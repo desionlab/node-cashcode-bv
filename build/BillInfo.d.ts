@@ -31,6 +31,10 @@ export declare class BillInfo {
      */
     enabled: boolean;
     /**
+     * Allowed to receive.
+     */
+    escrow: boolean;
+    /**
      * Bill constructor.
      *
      * @param data Raw data from the device.

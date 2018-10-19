@@ -13,7 +13,7 @@ import { Task } from './Task';
 import { Parser } from './Parser';
 import { EventEmitter } from 'events';
 import { Exception } from './Exception';
-import { getCRC16 } from './Utils';
+import { getCRC16, Array8Bit } from './Utils';
 import { DeviceInfo } from './DeviceInfo';
 import { BillInfo } from './BillInfo';
 import {
@@ -209,13 +209,31 @@ export class Device extends EventEmitter {
       await this.reset();
 
       /* Wait device initialize. */
-      await this.asyncOnce(String(DeviceStatus.INITIALIZE), 1000);
+      await this.asyncOnce(String(DeviceStatus.INITIALIZE), 2500);
       
       /* Get main info of the device. */
       await this.getInfo();
 
       /* Get list of supported bills. */
       await this.getBillTable();
+
+      /*  */
+      await this.beginEscrow();
+
+      /*  */
+      await this.asyncOnce(String(DeviceStatus.IDLING), 2500);
+
+      /*  */
+      let status = await this.getStatus();
+
+      /*  */
+      await this.endEscrow();
+
+      /*  */
+      for(let i = 0; i < this.billTable.length; i++) {
+        this.billTable[i].enabled = status.enabled[i];
+        this.billTable[i].security = status.security[i];
+      }
 
       /* Fire ready connect event. */
       this.emit('connect');
@@ -246,63 +264,162 @@ export class Device extends EventEmitter {
   /**
    * Reset the device to its original state.
    */
-  public async reset () : Promise<any> {
-    return await this.execute((new Commands.Reset()));
+  public async reset () : Promise<boolean> {
+    try {
+      await this.execute((new Commands.Reset()));
+      return true;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
    * Get main info of the device.
    */
   public async getInfo () : Promise<DeviceInfo> {
-    if (!this.info) {
-      this.info = new DeviceInfo(
-        await this.execute((new Commands.Identification())),
-        await this.execute((new Commands.GetCRC32OfTheCode()))
-      );
+    try {
+      if (!this.info) {
+        this.info = new DeviceInfo(
+          await this.execute((new Commands.Identification())),
+          await this.execute((new Commands.GetCRC32OfTheCode()))
+        );
+      }
+      
+      return this.info;
+    } catch (error) {
+      throw error;
     }
-
-    return this.info;
   }
 
   /**
    * Get list of supported bills.
    */
-  public async getBillTable () : Promise<any> {
-    if (!this.billTable.length) {
-      let data = await this.execute((new Commands.GetBillTable()));
-      for (var i = 0; i < 24; i++) {
-        let section = data.slice(i * 5, (i * 5 + 5));
-        this.billTable.push((new BillInfo(section)));
-      }
-    }
+  public async getBillTable () : Promise<Array<BillInfo>> {
+    try {
+      if (!this.billTable.length) {
+        let billTable = await this.execute((new Commands.GetBillTable()));
 
-    return this.billTable;
+        for (var i = 0; i < 24; i++) {
+          let section = billTable.slice(i * 5, (i * 5 + 5));
+          this.billTable.push((new BillInfo(section)));
+        }
+      }
+
+      return this.billTable;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
    * 
    */
-  public async beginEscrow () : Promise<any> {}
+  public async getStatus () : Promise<any> {
+    try {
+      let status = await this.execute((new Commands.GetStatus()));
+
+      let enabled = Array8Bit
+      .fromBuffer(status.slice(0, 3))
+      .toArray()
+      .reverse();
+
+      let security = Array8Bit
+      .fromBuffer(status.slice(3, 6))
+      .toArray()
+      .reverse();
+
+      return {
+        enabled,
+        security
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * 
    */
-  public async billHold () : Promise<any> {}
+  public async beginEscrow () : Promise<boolean> {
+    /*  */
+    let securityList: Array<boolean> = [];
+    let enabledList: Array<boolean> = [];
+    let escrowList: Array<boolean> = [];
+
+    /*  */
+    this.billTable.forEach(element => {
+      securityList.push(element.security);
+      enabledList.push(element.enabled);
+      escrowList.push(element.escrow);
+    });
+
+    try {
+      /*  */
+      //await this.execute(
+      //  (new Commands.SetSecurity()),
+      //  Array8Bit.fromArray(securityList).toBuffer()
+      //);
+      
+      /*  */
+      await this.execute(
+        (new Commands.EnableBillTypes()),
+        Buffer.concat([
+          Array8Bit.fromArray(enabledList.reverse()).toBuffer(),
+          Array8Bit.fromArray(escrowList.reverse()).toBuffer()
+        ])
+      );
+
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * 
    */
-  public async billStack () : Promise<any> {}
+  public async billHold () : Promise<boolean> {
+    try {
+      await this.execute((new Commands.Hold()));
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * 
    */
-  public async billReturn () : Promise<any> {}
+  public async billStack () : Promise<boolean> {
+    try {
+      await this.execute((new Commands.Stack()));
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * 
    */
-  public async endEscrow () : Promise<any> {}
+  public async billReturn () : Promise<boolean> {
+    try {
+      await this.execute((new Commands.Return()));
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * 
+   */
+  public async endEscrow () : Promise<any> {
+    return await this.execute(
+      (new Commands.EnableBillTypes()),
+      [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+    );
+  }
 
   /* ----------------------------------------------------------------------- */
   
@@ -372,7 +489,7 @@ export class Device extends EventEmitter {
   /**
    * Open serialport.
    */
-  protected open () : Promise<any> {
+  protected open () : Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (this.serial.isOpen) {
         resolve(true);
@@ -391,7 +508,7 @@ export class Device extends EventEmitter {
   /**
    * Close serialport.
    */
-  protected close () : Promise<any> {
+  protected close () : Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (this.serial.isOpen) {
         this.serial.close((error) => {
@@ -458,6 +575,7 @@ export class Device extends EventEmitter {
    * @param status Current devise status.
    */
   protected onStatus (status: Buffer) {
+    /* New status container. */
     let newStatus: number = null;
 
     /* Determine the new status. */
@@ -477,32 +595,37 @@ export class Device extends EventEmitter {
       newStatus = parseInt(status[0].toString(10));
     }
 
-    /*  */
+    /* Check new status. */
     if (newStatus) {
       if (newStatus !== this.status) {
-        /*  */
+        /* Set new status. */
         this.status = newStatus;
 
-        /*  */
+        /* Call a shared event for all device states. */
         this.emit(
           'status',
           this.status,
           DeviceStatusMessage.get(this.status),
           DeviceStatusDescription.get(this.status)
         );
-
-        /*  */
+        
+        /* Event call by type and purpose. */
         switch (newStatus) {
           case DeviceStatus.DEVICE_BUSY:
-
+            this.emit(
+              String(this.status),
+              parseInt(status[1].toString(10))
+            );
           break;
           case DeviceStatus.ESCROW_POSITION:
           case DeviceStatus.BILL_STACKED:
           case DeviceStatus.BILL_RETURNED:
-            
+            this.emit(
+              String(this.status),
+              this.billTable[parseInt(status[1].toString(10))]
+            );
           break;
           default:
-            /*  */
             this.emit(
               String(this.status),
               DeviceStatusMessage.get(this.status),

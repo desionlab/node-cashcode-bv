@@ -33,7 +33,12 @@ export class BillInfo {
   /**
    * Allowed to receive.
    */
-  public enabled: boolean = false;
+  public enabled: boolean = true;
+
+  /**
+   * Allowed to receive.
+   */
+  public escrow: boolean = true;
 
   /**
    * Bill constructor.
@@ -48,6 +53,9 @@ export class BillInfo {
       /* Clear not used item. */
       if (this.code == "\u0000\u0000\u0000") {
         this.code = '';
+        this.security = false;
+        this.enabled = false;
+        this.escrow = false;
       }
     }
   }
