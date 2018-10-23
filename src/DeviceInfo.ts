@@ -16,9 +16,9 @@
 export class DeviceInfo {
 
   /**
-   * Device part number.
+   * Device software version.
    */
-  public model: string = null;
+  public software: string = null;
 
   /**
    * Device serial number.
@@ -43,7 +43,7 @@ export class DeviceInfo {
    */
   public constructor (info: Buffer, crc: Buffer) {
     /* Pars info data. */
-    this.model = info.toString('ascii', 0, 15).trim();
+    this.software = info.toString('ascii', 0, 15).trim();
     this.serial = info.toString('ascii', 15, 27).trim();
     this.asset = info.toString('hex', 27, 34).trim();
 

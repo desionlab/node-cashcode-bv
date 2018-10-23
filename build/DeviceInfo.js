@@ -23,9 +23,9 @@ class DeviceInfo {
      */
     constructor(info, crc) {
         /**
-         * Device part number.
+         * Device software version.
          */
-        this.model = null;
+        this.software = null;
         /**
          * Device serial number.
          */
@@ -39,7 +39,7 @@ class DeviceInfo {
          */
         this.crc = 0;
         /* Pars info data. */
-        this.model = info.toString('ascii', 0, 15).trim();
+        this.software = info.toString('ascii', 0, 15).trim();
         this.serial = info.toString('ascii', 15, 27).trim();
         this.asset = info.toString('hex', 27, 34).trim();
         /* Pars crc data. */

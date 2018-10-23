@@ -15,6 +15,23 @@ import { DeviceInfo } from './DeviceInfo';
 import { BillInfo } from './BillInfo';
 import { DeviceStatus } from './Const';
 /**
+ * Bills status flags sets.
+ */
+export interface BillStatus {
+    /**
+     * The list of flags allowed to accept bills.
+     */
+    enabled: Array<boolean>;
+    /**
+     * List of security flags for bills.
+     */
+    security: Array<boolean>;
+    /**
+     * List of escrow flags for bills.
+     */
+    escrow?: Array<boolean>;
+}
+/**
  * Class Device
  *
  * The object implements the main methods and events for working
@@ -26,17 +43,11 @@ export declare class Device extends EventEmitter {
     /**
      * Serialport address.
      */
-    protected port: string;
+    port: string;
     /**
      * Serialport options.
      */
-    protected options: SerialPort.OpenOptions;
-    /**
-     * The logger. You can pass electron-log, winston or another logger
-     * with the following interface: { info(), debug(), warn(), error() }.
-     * Set it to null if you would like to disable a logging feature.
-     */
-    protected logger: any;
+    options: SerialPort.OpenOptions;
     /**
      * Serialport transport instant.
      */
@@ -46,17 +57,50 @@ export declare class Device extends EventEmitter {
      */
     protected parser: Parser;
     /**
-     * Device information.
+     * The logger. You can pass electron-log, winston or another logger
+     * with the following interface: { info(), debug(), warn(), error() }.
+     * Set it to null if you would like to disable a logging feature.
      */
-    protected info: DeviceInfo;
+    logger: any;
+    /**
+     * Flag allowing to log received, sent data packets.
+     */
+    debugPackets: boolean;
+    /**
+     * The current status of the device.
+     */
+    protected _status: DeviceStatus;
+    /**
+     * Getter for a current status of the device.
+     */
+    readonly status: DeviceStatus;
+    /**
+     * Device main information.
+     */
+    protected _info: DeviceInfo;
+    /**
+     * Getter for a device main information.
+     */
+    readonly info: DeviceInfo;
     /**
      * List of supported bills.
      */
-    protected billTable: Array<BillInfo>;
+    protected _billTable: Array<BillInfo>;
     /**
-     * Status code.
+     * Getter for a list of supported bills.
      */
-    protected status: DeviceStatus;
+    readonly billTable: Array<BillInfo>;
+    /**
+     * Bills status flags sets.
+     */
+    protected _billStatus: BillStatus;
+    /**
+     * Getter a bills status flags sets.
+     */
+    /**
+    * Setter a bills status flags sets.
+    */
+    billStatus: BillStatus;
     /**
      * A flag indicating the current command execution.
      */
@@ -66,7 +110,7 @@ export declare class Device extends EventEmitter {
      */
     protected queue: Array<Task>;
     /**
-     *
+     * Operating timer interval.
      */
     protected timerMs: number;
     /**
@@ -79,109 +123,28 @@ export declare class Device extends EventEmitter {
      * @param port Serial port address.
      * @param options Serial port open options.
      * @param logger Logger instant.
+     * @param debugPackets Flag allowing to log received, sent data packets.
      */
-    constructor(port: string, options?: SerialPort.OpenOptions, logger?: any);
-    /**
-     * Flag of the established connection to the device.
-     */
-    readonly isConnect: boolean;
-    /**
-     * A flag indicating the current command execution.
-     */
-    readonly isBusy: boolean;
-    /**
-     * Connect to device.
-     */
+    constructor(port: string, options?: SerialPort.OpenOptions, logger?: any, debugPackets?: boolean);
+    open(): Promise<boolean>;
     connect(): Promise<boolean>;
-    /**
-     * Disconnect from device.
-     */
     disconnect(): Promise<boolean>;
-    /**
-     * Reset the device to its original state.
-     */
+    close(): Promise<boolean>;
     reset(): Promise<boolean>;
-    /**
-     * Get main info of the device.
-     */
     getInfo(): Promise<DeviceInfo>;
-    /**
-     * Get list of supported bills.
-     */
     getBillTable(): Promise<Array<BillInfo>>;
-    /**
-     *
-     */
-    getStatus(): Promise<any>;
-    /**
-     *
-     */
+    getBillStatus(): Promise<BillStatus>;
     beginEscrow(): Promise<boolean>;
-    /**
-     *
-     */
     billHold(): Promise<boolean>;
-    /**
-     *
-     */
     billStack(): Promise<boolean>;
-    /**
-     *
-     */
     billReturn(): Promise<boolean>;
-    /**
-     *
-     */
-    endEscrow(): Promise<any>;
-    /**
-     * Execute the specified command.
-     *
-     * @param command Target command.
-     * @param params Execute parameters.
-     * @param timeout The maximum time to complete this action.
-     */
+    endEscrow(): Promise<boolean>;
     execute(command: Command, params?: any, timeout?: number): Promise<any>;
-    /**
-     * Synchronization of internal events with the execution queue.
-     *
-     * @param event Internal event name.
-     * @param timeout Maximum waiting time for an internal event.
-     */
     asyncOnce(event: string | symbol, timeout?: number): Promise<any>;
-    /**
-     * Open serialport.
-     */
-    protected open(): Promise<boolean>;
-    /**
-     * Close serialport.
-     */
-    protected close(): Promise<boolean>;
-    /**
-     * Start / Restart operating timer.
-     */
     protected startTimer(): void;
-    /**
-     * On serial open event.
-     */
-    protected onSerialPortOpen(): void;
-    /**
-     * On serial error event.
-     *
-     * @param error Serialport error object.
-     */
-    protected onSerialPortError(error: Error): void;
-    /**
-     * On serial close event.
-     */
-    protected onSerialPortClose(): void;
-    /**
-     * All status events handler.
-     *
-     * @param status Current devise status.
-     */
-    protected onStatus(status: Buffer): void;
-    /**
-     * Operating timer event.
-     */
     protected onTick(): void;
+    protected onStatus(status: Buffer): void;
+    protected onSerialPortOpen(): void;
+    protected onSerialPortError(error: Error): void;
+    protected onSerialPortClose(): void;
 }

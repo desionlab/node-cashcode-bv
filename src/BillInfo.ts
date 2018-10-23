@@ -36,11 +36,6 @@ export class BillInfo {
   public enabled: boolean = true;
 
   /**
-   * Allowed to receive.
-   */
-  public escrow: boolean = true;
-
-  /**
    * Bill constructor.
    * 
    * @param data Raw data from the device.
@@ -55,7 +50,6 @@ export class BillInfo {
         this.code = '';
         this.security = false;
         this.enabled = false;
-        this.escrow = false;
       }
     }
   }

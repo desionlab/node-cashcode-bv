@@ -37,10 +37,6 @@ class BillInfo {
          * Allowed to receive.
          */
         this.enabled = true;
-        /**
-         * Allowed to receive.
-         */
-        this.escrow = true;
         if (data) {
             this.amount = data[0] * Math.pow(10, data[4]);
             this.code = data.toString('ascii', 1, 4).trim();
@@ -49,7 +45,6 @@ class BillInfo {
                 this.code = '';
                 this.security = false;
                 this.enabled = false;
-                this.escrow = false;
             }
         }
     }

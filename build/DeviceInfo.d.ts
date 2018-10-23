@@ -15,9 +15,9 @@
  */
 export declare class DeviceInfo {
     /**
-     * Device part number.
+     * Device software version.
      */
-    model: string;
+    software: string;
     /**
      * Device serial number.
      */
