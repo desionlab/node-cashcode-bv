@@ -130,21 +130,71 @@ export declare class Device extends EventEmitter {
     connect(): Promise<boolean>;
     disconnect(): Promise<boolean>;
     close(): Promise<boolean>;
-    reset(): Promise<boolean>;
-    getInfo(): Promise<DeviceInfo>;
-    getBillTable(): Promise<Array<BillInfo>>;
-    getBillStatus(): Promise<BillStatus>;
-    beginEscrow(): Promise<boolean>;
-    billHold(): Promise<boolean>;
-    billStack(): Promise<boolean>;
-    billReturn(): Promise<boolean>;
-    endEscrow(): Promise<boolean>;
+    /**
+     *
+     */
+    begin(): Promise<boolean>;
+    /**
+     *
+     */
+    hold(): Promise<boolean>;
+    /**
+     *
+     */
+    stack(): Promise<boolean>;
+    /**
+     *
+     */
+    return(): Promise<boolean>;
+    /**
+     *
+     */
+    end(): Promise<boolean>;
+    /**
+     * Execute the specified command.
+     *
+     * @param command Target command.
+     * @param params Execute parameters.
+     * @param timeout The maximum time to complete this action.
+     */
     execute(command: Command, params?: any, timeout?: number): Promise<any>;
+    /**
+     * Synchronization of internal events with the execution queue.
+     *
+     * @param event Internal event name.
+     * @param timeout Maximum waiting time for an internal event.
+     */
     asyncOnce(event: string | symbol, timeout?: number): Promise<any>;
+    /**
+     * Start / Restart operating timer.
+     */
     protected startTimer(): void;
+    /**
+     * Stop operating timer.
+     */
+    protected stopTimer(): void;
+    /**
+     * Operating timer event.
+     */
     protected onTick(): void;
+    /**
+     * All status events handler.
+     *
+     * @param status Current devise status.
+     */
     protected onStatus(status: Buffer): void;
+    /**
+     * On serial open event.
+     */
     protected onSerialPortOpen(): void;
+    /**
+     * On serial error event.
+     *
+     * @param error Serialport error object.
+     */
     protected onSerialPortError(error: Error): void;
+    /**
+     * On serial close event.
+     */
     protected onSerialPortClose(): void;
 }
