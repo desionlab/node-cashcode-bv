@@ -126,9 +126,21 @@ export declare class Device extends EventEmitter {
      * @param debugPackets Flag allowing to log received, sent data packets.
      */
     constructor(port: string, options?: SerialPort.OpenOptions, logger?: any, debugPackets?: boolean);
+    /**
+     *
+     */
     open(): Promise<boolean>;
+    /**
+     *
+     */
     connect(): Promise<boolean>;
+    /**
+     *
+     */
     disconnect(): Promise<boolean>;
+    /**
+     *
+     */
     close(): Promise<boolean>;
     /**
      *

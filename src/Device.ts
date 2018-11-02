@@ -231,18 +231,30 @@ export class Device extends EventEmitter {
   
   /* ----------------------------------------------------------------------- */
   
+  /**
+   * 
+   */
   public open () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {});
   }
 
+  /**
+   * 
+   */
   public connect () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {});
   }
   
+  /**
+   * 
+   */
   public disconnect () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {});
   }
   
+  /**
+   * 
+   */
   public close () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {});
   }
@@ -255,6 +267,20 @@ export class Device extends EventEmitter {
   public begin () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
+        /*  */
+        await this.execute(
+          (new Commands.SetSecurity()),
+          Array8Bit.fromArray(this.billStatus.security).toBuffer().reverse()
+        );
+        
+        /*  */
+        await this.execute(
+          (new Commands.EnableBillTypes()),
+          Buffer.concat([
+            Array8Bit.fromArray(this.billStatus.enabled).toBuffer().reverse(),
+            Array8Bit.fromArray(this.billStatus.escrow).toBuffer().reverse()
+          ])
+        );
         
         resolve(true);
       } catch (error) {
@@ -269,7 +295,9 @@ export class Device extends EventEmitter {
   public hold () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
+        /*  */
         await this.execute((new Commands.Hold()));
+        
         resolve(true);
       } catch (error) {
         reject(error);
@@ -283,7 +311,9 @@ export class Device extends EventEmitter {
   public stack () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
+        /*  */
         await this.execute((new Commands.Stack()));
+        
         resolve(true);
       } catch (error) {
         reject(error);
@@ -297,7 +327,9 @@ export class Device extends EventEmitter {
   public return () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
+        /*  */
         await this.execute((new Commands.Return()));
+        
         resolve(true);
       } catch (error) {
         reject(error);
@@ -311,10 +343,12 @@ export class Device extends EventEmitter {
   public end () : Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
+        /*  */
         await this.execute(
           (new Commands.EnableBillTypes()),
           [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         );
+
         resolve(true);
       } catch (error) {
         reject(error);

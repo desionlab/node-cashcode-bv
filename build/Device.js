@@ -173,15 +173,27 @@ class Device extends events_1.EventEmitter {
         this._billStatus = value;
     }
     /* ----------------------------------------------------------------------- */
+    /**
+     *
+     */
     open() {
         return new Promise(async (resolve, reject) => { });
     }
+    /**
+     *
+     */
     connect() {
         return new Promise(async (resolve, reject) => { });
     }
+    /**
+     *
+     */
     disconnect() {
         return new Promise(async (resolve, reject) => { });
     }
+    /**
+     *
+     */
     close() {
         return new Promise(async (resolve, reject) => { });
     }
@@ -192,6 +204,13 @@ class Device extends events_1.EventEmitter {
     begin() {
         return new Promise(async (resolve, reject) => {
             try {
+                /*  */
+                await this.execute((new Commands.SetSecurity()), Utils_1.Array8Bit.fromArray(this.billStatus.security).toBuffer().reverse());
+                /*  */
+                await this.execute((new Commands.EnableBillTypes()), Buffer.concat([
+                    Utils_1.Array8Bit.fromArray(this.billStatus.enabled).toBuffer().reverse(),
+                    Utils_1.Array8Bit.fromArray(this.billStatus.escrow).toBuffer().reverse()
+                ]));
                 resolve(true);
             }
             catch (error) {
@@ -205,6 +224,7 @@ class Device extends events_1.EventEmitter {
     hold() {
         return new Promise(async (resolve, reject) => {
             try {
+                /*  */
                 await this.execute((new Commands.Hold()));
                 resolve(true);
             }
@@ -219,6 +239,7 @@ class Device extends events_1.EventEmitter {
     stack() {
         return new Promise(async (resolve, reject) => {
             try {
+                /*  */
                 await this.execute((new Commands.Stack()));
                 resolve(true);
             }
@@ -233,6 +254,7 @@ class Device extends events_1.EventEmitter {
     return() {
         return new Promise(async (resolve, reject) => {
             try {
+                /*  */
                 await this.execute((new Commands.Return()));
                 resolve(true);
             }
@@ -247,6 +269,7 @@ class Device extends events_1.EventEmitter {
     end() {
         return new Promise(async (resolve, reject) => {
             try {
+                /*  */
                 await this.execute((new Commands.EnableBillTypes()), [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
                 resolve(true);
             }
