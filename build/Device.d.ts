@@ -133,15 +133,15 @@ export declare class Device extends EventEmitter {
     /**
      *
      */
+    close(): Promise<boolean>;
+    /**
+     *
+     */
     connect(): Promise<boolean>;
     /**
      *
      */
     disconnect(): Promise<boolean>;
-    /**
-     *
-     */
-    close(): Promise<boolean>;
     /**
      *
      */

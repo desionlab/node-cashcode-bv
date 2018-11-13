@@ -177,7 +177,15 @@ class Device extends events_1.EventEmitter {
      *
      */
     open() {
-        return new Promise(async (resolve, reject) => { });
+        return new Promise(async (resolve, reject) => {
+        });
+    }
+    /**
+     *
+     */
+    close() {
+        return new Promise(async (resolve, reject) => {
+        });
     }
     /**
      *
@@ -189,12 +197,6 @@ class Device extends events_1.EventEmitter {
      *
      */
     disconnect() {
-        return new Promise(async (resolve, reject) => { });
-    }
-    /**
-     *
-     */
-    close() {
         return new Promise(async (resolve, reject) => { });
     }
     /* ----------------------------------------------------------------------- */

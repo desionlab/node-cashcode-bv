@@ -235,7 +235,18 @@ export class Device extends EventEmitter {
    * 
    */
   public open () : Promise<boolean> {
-    return new Promise(async (resolve, reject) => {});
+    return new Promise(async (resolve, reject) => {
+
+    });
+  }
+
+  /**
+   * 
+   */
+  public close () : Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      
+    });
   }
 
   /**
@@ -252,13 +263,6 @@ export class Device extends EventEmitter {
     return new Promise(async (resolve, reject) => {});
   }
   
-  /**
-   * 
-   */
-  public close () : Promise<boolean> {
-    return new Promise(async (resolve, reject) => {});
-  }
-
   /* ----------------------------------------------------------------------- */
   
   /**
