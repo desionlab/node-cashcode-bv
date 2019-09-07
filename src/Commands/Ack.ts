@@ -2,7 +2,7 @@
  * Ack.ts
  *
  * @author    Desionlab <fenixphp@gmail.com>
- * @copyright 2018 Desionlab
+ * @copyright 2017 - 2019 Desionlab
  * @license   MIT
  */
 
