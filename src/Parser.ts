@@ -1,6 +1,6 @@
 /**
  * Parser.ts
- * 
+ *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2017 - 2018 Desionlab
  * @license   MIT
@@ -10,13 +10,12 @@ import { Transform, TransformOptions, TransformCallback } from 'stream';
 
 /**
  * Class Parser
- * 
+ *
  * Pars CCNet packet.
- * 
+ *
  * @version 1.0.0
  */
 export class Parser extends Transform {
-
   /**
    * Packet container.
    */
@@ -32,18 +31,18 @@ export class Parser extends Transform {
   /**
    * Parser constructor.
    */
-  public constructor (options?: TransformOptions) {
+  public constructor(options?: TransformOptions) {
     super(options);
   }
 
   /**
    * Receive and pars CCNet packet.
-   * 
+   *
    * @param chunk Received buffer.
-   * @param encoding 
-   * @param callback 
+   * @param encoding
+   * @param callback
    */
-  public _transform (chunk: any, encoding: string, callback: TransformCallback) {
+  public _transform(chunk: any, encoding: string, callback: TransformCallback) {
     this.packet = Buffer.concat([this.packet, chunk]);
 
     if (this.packet.length >= 3 && this.packetLength === 0) {
@@ -55,10 +54,7 @@ export class Parser extends Transform {
       this.packet = new Buffer(0);
       this.packetLength = 0;
     }
-    
+
     callback();
   }
-
 }
-
-/* End of file Parser.ts */

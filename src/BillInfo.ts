@@ -1,20 +1,19 @@
 /**
  * BillInfo.ts
- * 
+ *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2018 Desionlab
  * @license   MIT
  */
 
- /**
-  * Class BillInfo
-  * 
-  * Defines the parameters of a supported bill.
-  * 
-  * @version 1.0.0
-  */
+/**
+ * Class BillInfo
+ *
+ * Defines the parameters of a supported bill.
+ *
+ * @version 1.0.0
+ */
 export class BillInfo {
-
   /**
    * Denomination.
    */
@@ -37,23 +36,20 @@ export class BillInfo {
 
   /**
    * Bill constructor.
-   * 
+   *
    * @param data Raw data from the device.
    */
-  public constructor (data?: Buffer) {
+  public constructor(data?: Buffer) {
     if (data) {
       this.amount = data[0] * Math.pow(10, data[4]);
       this.code = data.toString('ascii', 1, 4).trim();
-      
+
       /* Clear not used item. */
-      if (this.code == "\u0000\u0000\u0000") {
+      if (this.code == '\u0000\u0000\u0000') {
         this.code = '';
         this.security = false;
         this.enabled = false;
       }
     }
   }
-
 }
-
-/* End of file BillInfo.ts */

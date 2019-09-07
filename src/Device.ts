@@ -1,6 +1,6 @@
 /**
  * Device.ts
- * 
+ *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2018 Desionlab
  * @license   MIT
@@ -19,7 +19,7 @@ import { BillInfo } from './BillInfo';
 import {
   DeviceStatus,
   DeviceStatusMessage,
-  DeviceStatusDescription
+  DeviceStatusDescription,
 } from './Const';
 
 /**
@@ -29,31 +29,30 @@ export interface BillStatus {
   /**
    * The list of flags allowed to accept bills.
    */
-  enabled: Array<boolean>,
+  enabled: Array<boolean>;
 
   /**
    * List of security flags for bills.
    */
-  security: Array<boolean>,
+  security: Array<boolean>;
 
   /**
    * List of escrow flags for bills.
    */
-  escrow?: Array<boolean>
+  escrow?: Array<boolean>;
 }
 
 /**
  * Class Device
- * 
- * The object implements the main methods and events for working 
+ *
+ * The object implements the main methods and events for working
  * with the "CashCode" bill acceptor using the "CCNet" protocol.
- * 
+ *
  * @version 1.0.0
  */
 export class Device extends EventEmitter {
-
   /* ----------------------------------------------------------------------- */
-  
+
   /**
    * Serialport address.
    */
@@ -67,9 +66,9 @@ export class Device extends EventEmitter {
     dataBits: 8,
     stopBits: 1,
     parity: 'none',
-    autoOpen: false
+    autoOpen: false,
   };
-  
+
   /**
    * Serialport transport instant.
    */
@@ -79,9 +78,9 @@ export class Device extends EventEmitter {
    * CCNet packet parser instant.
    */
   protected parser: Parser = null;
-  
+
   /* ----------------------------------------------------------------------- */
-  
+
   /**
    * The logger. You can pass electron-log, winston or another logger
    * with the following interface: { info(), debug(), warn(), error() }.
@@ -95,7 +94,7 @@ export class Device extends EventEmitter {
   public debugPackets: boolean = false;
 
   /* ----------------------------------------------------------------------- */
-  
+
   /**
    * The current status of the device.
    */
@@ -104,7 +103,7 @@ export class Device extends EventEmitter {
   /**
    * Getter for a current status of the device.
    */
-  get status () : DeviceStatus {
+  get status(): DeviceStatus {
     return this._status;
   }
 
@@ -116,7 +115,7 @@ export class Device extends EventEmitter {
   /**
    * Getter for a device main information.
    */
-  get info () : DeviceInfo {
+  get info(): DeviceInfo {
     return this._info;
   }
 
@@ -128,10 +127,10 @@ export class Device extends EventEmitter {
   /**
    * Getter for a list of supported bills.
    */
-  get billTable () : Array<BillInfo> {
+  get billTable(): Array<BillInfo> {
     return this._billTable;
   }
-  
+
   /**
    * Bills status flags sets.
    */
@@ -139,46 +138,115 @@ export class Device extends EventEmitter {
     /**
      * The list of flags allowed to accept bills.
      */
-    enabled: [true, true, true, true, true, true, true, true, true,
-      true, true, true, true, true, true, true, true, true, true, true,
-      true, true, true, true],
-    
+    enabled: [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ],
+
     /**
      * List of security flags for bills.
      */
-    security: [false, false, false, false, false, false, false, false,
-      false, false, false, false, false, false, false, false, false, false,
-      false, false, false, false, false, false],
-    
+    security: [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+
     /**
      * List of escrow flags for bills.
      */
-    escrow: [true, true, true, true, true, true, true, true, true,
-      true, true, true, true, true, true, true, true, true, true, true,
-      true, true, true, true]
-  }
+    escrow: [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ],
+  };
 
   /**
    * Getter a bills status flags sets.
    */
-  get billStatus () : BillStatus {
+  get billStatus(): BillStatus {
     return this._billStatus;
   }
 
   /**
    * Setter a bills status flags sets.
    */
-  set billStatus (value: BillStatus) {
+  set billStatus(value: BillStatus) {
     this._billStatus = value;
   }
 
   /* ----------------------------------------------------------------------- */
-  
+
   /**
    * A flag indicating the current command execution.
    */
   protected busy: boolean = false;
-  
+
   /**
    * List of pending commands.
    */
@@ -195,24 +263,26 @@ export class Device extends EventEmitter {
   protected timerInterval: NodeJS.Timer = null;
 
   /* ----------------------------------------------------------------------- */
-  
+
   /**
    * Device constructor.
-   * 
+   *
    * @param port Serial port address.
    * @param options Serial port open options.
    * @param logger Logger instant.
    * @param debugPackets Flag allowing to log received, sent data packets.
    */
-  public constructor (
-    port: string, options?: SerialPort.OpenOptions,
-    logger?: any, debugPackets?: boolean
+  public constructor(
+    port: string,
+    options?: SerialPort.OpenOptions,
+    logger?: any,
+    debugPackets?: boolean,
   ) {
     super();
-    
+
     /* Set serialport address. */
     this.port = port;
-    
+
     /* Set serialport options. */
     if (options) {
       this.options = Object.assign(this.options, options);
@@ -222,118 +292,72 @@ export class Device extends EventEmitter {
     if (logger) {
       this.logger = logger;
     }
-    
+
     /* Set packets log flag. */
     if (debugPackets) {
       this.debugPackets = debugPackets;
     }
   }
-  
+
   /* ----------------------------------------------------------------------- */
-  
-  /**
-   * 
-   */
-  public open () : Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-
-    });
-  }
 
   /**
-   * 
+   *
    */
-  public close () : Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      
-    });
-  }
-
-  /**
-   * 
-   */
-  public connect () : Promise<boolean> {
+  public open(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {});
   }
-  
+
   /**
-   * 
+   *
    */
-  public disconnect () : Promise<boolean> {
+  public close(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {});
   }
-  
-  /* ----------------------------------------------------------------------- */
-  
+
   /**
-   * 
+   *
    */
-  public begin () : Promise<boolean> {
+  public connect(): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {});
+  }
+
+  /**
+   *
+   */
+  public disconnect(): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {});
+  }
+
+  /* ----------------------------------------------------------------------- */
+
+  /**
+   *
+   */
+  public begin(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
         /*  */
         await this.execute(
-          (new Commands.SetSecurity()),
-          Array8Bit.fromArray(this.billStatus.security).toBuffer().reverse()
+          new Commands.SetSecurity(),
+          Array8Bit.fromArray(this.billStatus.security)
+            .toBuffer()
+            .reverse(),
         );
-        
+
         /*  */
         await this.execute(
-          (new Commands.EnableBillTypes()),
+          new Commands.EnableBillTypes(),
           Buffer.concat([
-            Array8Bit.fromArray(this.billStatus.enabled).toBuffer().reverse(),
-            Array8Bit.fromArray(this.billStatus.escrow).toBuffer().reverse()
-          ])
+            Array8Bit.fromArray(this.billStatus.enabled)
+              .toBuffer()
+              .reverse(),
+            Array8Bit.fromArray(this.billStatus.escrow)
+              .toBuffer()
+              .reverse(),
+          ]),
         );
-        
-        resolve(true);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-  
-  /**
-   * 
-   */
-  public hold () : Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        /*  */
-        await this.execute((new Commands.Hold()));
-        
-        resolve(true);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-  
-  /**
-   * 
-   */
-  public stack () : Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        /*  */
-        await this.execute((new Commands.Stack()));
-        
-        resolve(true);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-  
-  /**
-   * 
-   */
-  public return () : Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        /*  */
-        await this.execute((new Commands.Return()));
-        
+
         resolve(true);
       } catch (error) {
         reject(error);
@@ -342,16 +366,68 @@ export class Device extends EventEmitter {
   }
 
   /**
-   * 
+   *
    */
-  public end () : Promise<boolean> {
+  public hold(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
         /*  */
-        await this.execute(
-          (new Commands.EnableBillTypes()),
-          [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-        );
+        await this.execute(new Commands.Hold());
+
+        resolve(true);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  public stack(): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        /*  */
+        await this.execute(new Commands.Stack());
+
+        resolve(true);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  public return(): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        /*  */
+        await this.execute(new Commands.Return());
+
+        resolve(true);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  public end(): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        /*  */
+        await this.execute(new Commands.EnableBillTypes(), [
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+        ]);
 
         resolve(true);
       } catch (error) {
@@ -361,23 +437,31 @@ export class Device extends EventEmitter {
   }
 
   /* ----------------------------------------------------------------------- */
-  
+
   /**
    * Execute the specified command.
-   * 
+   *
    * @param command Target command.
    * @param params Execute parameters.
    * @param timeout The maximum time to complete this action.
    */
-  public execute (command: Command, params: any = [], timeout: number = 1000) : Promise<any> {
+  public execute(
+    command: Command,
+    params: any = [],
+    timeout: number = 1000,
+  ): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      let task = new Task(command.request(params), (error, data) => {
-        if (error) {
-          reject(error);
-        }
+      let task = new Task(
+        command.request(params),
+        (error, data) => {
+          if (error) {
+            reject(error);
+          }
 
-        resolve(command.response(data));
-      }, timeout);
+          resolve(command.response(data));
+        },
+        timeout,
+      );
 
       this.queue.push(task);
     });
@@ -385,11 +469,14 @@ export class Device extends EventEmitter {
 
   /**
    * Synchronization of internal events with the execution queue.
-   * 
+   *
    * @param event Internal event name.
    * @param timeout Maximum waiting time for an internal event.
    */
-  public asyncOnce (event: string | symbol, timeout: number = 1000) : Promise<any> {
+  public asyncOnce(
+    event: string | symbol,
+    timeout: number = 1000,
+  ): Promise<any> {
     return new Promise(async (resolve, reject) => {
       let timeoutCounter: number = 0;
 
@@ -414,7 +501,7 @@ export class Device extends EventEmitter {
 
         resolve(true);
       };
-      
+
       this.once(event, handler);
 
       if (timeout) {
@@ -422,11 +509,11 @@ export class Device extends EventEmitter {
       }
     });
   }
-  
+
   /**
    * Start / Restart operating timer.
    */
-  protected startTimer () : void {
+  protected startTimer(): void {
     /* Clear operating timer. */
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
@@ -441,16 +528,16 @@ export class Device extends EventEmitter {
   /**
    * Stop operating timer.
    */
-  protected stopTimer () : void {
+  protected stopTimer(): void {
     clearInterval(this.timerInterval);
   }
 
   /* ----------------------------------------------------------------------- */
-  
+
   /**
    * Operating timer event.
    */
-  protected onTick () : void {
+  protected onTick(): void {
     /* Check busy flag. */
     if (!this.busy) {
       let task = this.queue.shift();
@@ -478,10 +565,10 @@ export class Device extends EventEmitter {
         /* Receive packet handler. */
         let handler = async (response: Buffer) => {
           this.removeListener('tick', timeoutHandler);
-            
+
           /* Unbind event. */
           this.parser.removeListener('data', handler);
-          
+
           /* Write debug info. */
           if (this.logger && this.debugPackets) {
             this.logger.debug('RP:', response);
@@ -489,13 +576,13 @@ export class Device extends EventEmitter {
 
           /* Check CRC */
           let ln = response.length;
-          let check = response.slice(ln-2, ln);
-          let slice = response.slice(0, ln-2);
+          let check = response.slice(ln - 2, ln);
+          let slice = response.slice(0, ln - 2);
 
           /* Check response CRC. */
-          if (check.toString() !== (getCRC16(slice)).toString()) {
+          if (check.toString() !== getCRC16(slice).toString()) {
             /* Send NAK. */
-            await this.serial.write((new Commands.Nak()).request());
+            await this.serial.write(new Commands.Nak().request());
 
             /* Update flag. */
             this.busy = false;
@@ -505,24 +592,24 @@ export class Device extends EventEmitter {
           }
 
           /* Get data from packet. */
-          let data = response.slice(3, ln-2);
-          
+          let data = response.slice(3, ln - 2);
+
           /* Check response type. */
           if (data.length == 1 && data[0] == 0x00) {
             /* Response receive as ACK. */
-          } else if (data.length == 1 && data[0] == 0xFF) {
+          } else if (data.length == 1 && data[0] == 0xff) {
             /* Response receive as NAK. */
-            
+
             /* Update flag. */
             this.busy = false;
-            
+
             /* Send event. */
             task.done(new Exception(11, 'Wrong request data hash.'), null);
           } else {
             /* Send ACK. */
-            await this.serial.write((new Commands.Ack()).request());
+            await this.serial.write(new Commands.Ack().request());
           }
-          
+
           /* Update flag. */
           this.busy = false;
 
@@ -547,23 +634,29 @@ export class Device extends EventEmitter {
         }
       } else {
         /* Add poll task to queue. */
-        this.queue.push(new Task((new Commands.Poll()).request(), (error, data) => {
-          if (error) {
-            throw error;
-          }
-  
-          this.onStatus(data);
-        }, 1000));
+        this.queue.push(
+          new Task(
+            new Commands.Poll().request(),
+            (error, data) => {
+              if (error) {
+                throw error;
+              }
+
+              this.onStatus(data);
+            },
+            1000,
+          ),
+        );
       }
     }
   }
-  
+
   /**
    * All status events handler.
-   * 
+   *
    * @param status Current devise status.
    */
-  protected onStatus (status: Buffer) : void {
+  protected onStatus(status: Buffer): void {
     /* New status container. */
     let newStatus: number = null;
 
@@ -575,10 +668,10 @@ export class Device extends EventEmitter {
         case DeviceStatus.BILL_STACKED:
         case DeviceStatus.BILL_RETURNED:
           newStatus = parseInt(status[0].toString(10));
-        break;
+          break;
         default:
-          newStatus = parseInt(status[0].toString(10)+status[1].toString(10));
-        break;
+          newStatus = parseInt(status[0].toString(10) + status[1].toString(10));
+          break;
       }
     } else {
       newStatus = parseInt(status[0].toString(10));
@@ -595,53 +688,50 @@ export class Device extends EventEmitter {
           'status',
           this._status,
           DeviceStatusMessage.get(this._status),
-          DeviceStatusDescription.get(this._status)
+          DeviceStatusDescription.get(this._status),
         );
-        
+
         /* Event call by type and purpose. */
         switch (newStatus) {
           case DeviceStatus.DEVICE_BUSY:
-            this.emit(
-              String(this._status),
-              parseInt(status[1].toString(10))
-            );
-          break;
+            this.emit(String(this._status), parseInt(status[1].toString(10)));
+            break;
           case DeviceStatus.ESCROW_POSITION:
           case DeviceStatus.BILL_STACKED:
           case DeviceStatus.BILL_RETURNED:
             this.emit(
               String(this._status),
-              this.billTable[parseInt(status[1].toString(10))]
+              this.billTable[parseInt(status[1].toString(10))],
             );
-          break;
+            break;
           default:
             this.emit(
               String(this._status),
               DeviceStatusMessage.get(this._status),
-              DeviceStatusDescription.get(this._status)
+              DeviceStatusDescription.get(this._status),
             );
-          break;
+            break;
         }
       }
     } else {
       /* Status not recognized. */
     }
   }
-  
+
   /**
    * On serial open event.
    */
-  protected onSerialPortOpen () : void {
+  protected onSerialPortOpen(): void {
     /* Start operating timer. */
     this.startTimer();
   }
 
   /**
    * On serial error event.
-   * 
+   *
    * @param error Serialport error object.
    */
-  protected onSerialPortError (error: Error) : void {
+  protected onSerialPortError(error: Error): void {
     /* Stop operating timer. */
     this.stopTimer();
   }
@@ -649,13 +739,10 @@ export class Device extends EventEmitter {
   /**
    * On serial close event.
    */
-  protected onSerialPortClose () : void {
+  protected onSerialPortClose(): void {
     /* Stop operating timer. */
     this.stopTimer();
   }
 
   /* ----------------------------------------------------------------------- */
-  
 }
-
-/* End of file Device.ts */

@@ -1,6 +1,6 @@
 /**
  * index.ts
- * 
+ *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2018 Desionlab
  * @license   MIT
@@ -23,5 +23,3 @@ export * from './Return';
 export * from './SetBarcodeParameters';
 export * from './SetSecurity';
 export * from './Stack';
-
-/* End of file index.ts */

@@ -1,6 +1,6 @@
 /**
  * Exception.ts
- * 
+ *
  * @author    Desionlab <fenixphp@gmail.com>
  * @copyright 2018 Desionlab
  * @license   MIT
@@ -8,13 +8,12 @@
 
 /**
  * Class Exception
- * 
+ *
  * Custom error wrapper.
- * 
+ *
  * @version 1.0.0
  */
 export class Exception extends Error {
-
   /**
    * Number error code.
    */
@@ -24,11 +23,11 @@ export class Exception extends Error {
 
   /**
    * Exception constructor.
-   * 
+   *
    * @param code Number error code.
    * @param message Text error message.
    */
-  public constructor (code: number, message: string) {
+  public constructor(code: number, message: string) {
     super(message);
 
     this.code = code;
@@ -37,7 +36,4 @@ export class Exception extends Error {
 
     Error.captureStackTrace(this, this.constructor);
   }
-
 }
-
-/* End of file Exception.ts */
