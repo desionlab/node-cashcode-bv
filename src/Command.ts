@@ -62,7 +62,7 @@ export class Command {
       /* Length. */
       new Buffer([params.length + 6]),
       /* Command. */
-      new Buffer([this.cmd]),
+      new Buffer([this.cmd])
     ]);
 
     /* Assemble params packet data. */
@@ -71,7 +71,7 @@ export class Command {
         /* Main packet data. */
         cmd,
         /* Command params. */
-        params,
+        params
       ]);
     }
 

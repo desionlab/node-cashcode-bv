@@ -89,7 +89,7 @@ export enum DeviceStatus {
   /* ----------------------------------------------------------------------- */
   ESCROW_POSITION = 128,
   BILL_STACKED = 129,
-  BILL_RETURNED = 130,
+  BILL_RETURNED = 130
 }
 
 /**
@@ -99,11 +99,11 @@ export const DeviceStatusMessage = new Map<DeviceStatus, string>([
   [DeviceStatus.POWER_UP, 'Power up.'],
   [
     DeviceStatus.POWER_UP_WITH_BILL_IN_VALIDATOR,
-    'Power up with bill in the bill validator.',
+    'Power up with bill in the bill validator.'
   ],
   [
     DeviceStatus.POWER_UP_WITH_BILL_IN_STACKER,
-    'Power up with bill in stacker.',
+    'Power up with bill in stacker.'
   ],
   /* ----------------------------------------------------------------------- */
   [DeviceStatus.INITIALIZE, 'Initialize.'],
@@ -119,17 +119,17 @@ export const DeviceStatusMessage = new Map<DeviceStatus, string>([
   [DeviceStatus.REJECTING_DUE_TO_MAGNETIC, 'Rejecting due to magnetic.'],
   [
     DeviceStatus.REJECTING_DUE_TO_REMAINED_BILL_IN_HEAD,
-    'Rejecting due to remained bill in head.',
+    'Rejecting due to remained bill in head.'
   ],
   [DeviceStatus.REJECTING_DUE_TO_MULTIPLYING, 'Rejecting due to multiplying.'],
   [DeviceStatus.REJECTING_DUE_TO_CONVEYING, 'Rejecting due to conveying.'],
   [
     DeviceStatus.REJECTING_DUE_TO_IDENTIFICATION,
-    'Rejecting due to identification.',
+    'Rejecting due to identification.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_VERIFICATION,
-    'Rejecting due to verification.',
+    'Rejecting due to verification.'
   ],
   [DeviceStatus.REJECTING_DUE_TO_OPTIC, 'Rejecting due to optic.'],
   [DeviceStatus.REJECTING_DUE_TO_INHIBIT, 'Rejecting due to inhibit.'],
@@ -138,26 +138,26 @@ export const DeviceStatusMessage = new Map<DeviceStatus, string>([
   [DeviceStatus.REJECTING_DUE_TO_LENGTH, 'Rejecting due to length.'],
   [
     DeviceStatus.REJECTING_DUE_TO_UNRECOGNISED_BARCODE,
-    'Rejecting due to unrecognised barcode.',
+    'Rejecting due to unrecognised barcode.'
   ],
   [DeviceStatus.REJECTING_DUE_TO_UV, 'Rejecting due to UV.'],
   [
     DeviceStatus.REJECTING_DUE_TO_INCORRECT_NUMBER_OF_CHARACTERS_IN_BARCODE,
-    'Rejecting due to incorrect number of characters in barcode.',
+    'Rejecting due to incorrect number of characters in barcode.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_UNKNOWN_BARCODE_START_SEQUENCE,
-    'Rejecting due to unknown barcode start sequence.',
+    'Rejecting due to unknown barcode start sequence.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_UNKNOWN_BARCODE_STOP_SEQUENCE,
-    'Rejecting due to unknown barcode stop sequence.',
+    'Rejecting due to unknown barcode stop sequence.'
   ],
   /* ----------------------------------------------------------------------- */
   [DeviceStatus.DROP_CASSETTE_FULL, 'Drop cassette full.'],
   [
     DeviceStatus.DROP_CASSETTE_OUT_OF_POSITION,
-    'Drop cassette out of position.',
+    'Drop cassette out of position.'
   ],
   [DeviceStatus.VALIDATOR_JAMMED, 'Validator jammed.'],
   [DeviceStatus.DROP_CASSETTE_JAMMED, 'Drop cassette jammed.'],
@@ -167,13 +167,13 @@ export const DeviceStatusMessage = new Map<DeviceStatus, string>([
   [DeviceStatus.STACK_MOTOR_FAILURE, 'Stack motor failure.'],
   [
     DeviceStatus.TRANSPORT_MOTOR_SPEED_FAILURE,
-    'Transport motor speed failure.',
+    'Transport motor speed failure.'
   ],
   [DeviceStatus.TRANSPORT_MOTOR_FAILURE, 'Transport motor failure.'],
   [DeviceStatus.ALIGNING_MOTOR_FAILURE, 'Aligning motor failure.'],
   [
     DeviceStatus.INITIAL_CASSETTE_STATUS_FAILURE,
-    'Initial cassette status failure.',
+    'Initial cassette status failure.'
   ],
   [DeviceStatus.OPTIC_CANAL_FAILURE, 'Optic canal failure.'],
   [DeviceStatus.MAGNETIC_CANAL_FAILURE, 'Magnetic canal failure.'],
@@ -181,7 +181,7 @@ export const DeviceStatusMessage = new Map<DeviceStatus, string>([
   /* ----------------------------------------------------------------------- */
   [DeviceStatus.ESCROW_POSITION, 'Escrow position.'],
   [DeviceStatus.BILL_STACKED, 'Bill stacked.'],
-  [DeviceStatus.BILL_RETURNED, 'Bill returned.'],
+  [DeviceStatus.BILL_RETURNED, 'Bill returned.']
 ]);
 
 /**
@@ -191,55 +191,55 @@ export const DeviceStatusDescription = new Map<DeviceStatus, string>([
   [DeviceStatus.POWER_UP, 'The state of the bill validator after power up.'],
   [
     DeviceStatus.POWER_UP_WITH_BILL_IN_VALIDATOR,
-    'Power up with bill in the Bill Validator. After a RESET command from the Controller Bill Validator returns the bill and continues initializing.',
+    'Power up with bill in the Bill Validator. After a RESET command from the Controller Bill Validator returns the bill and continues initializing.'
   ],
   [
     DeviceStatus.POWER_UP_WITH_BILL_IN_STACKER,
-    'Power up with bill in Stacker (Bill was transported too far to be returned). After the Bill Validator is reset and INITIALIZING is complete, status will immediately change to STACKED (81H) (Credit Recovery feature).',
+    'Power up with bill in Stacker (Bill was transported too far to be returned). After the Bill Validator is reset and INITIALIZING is complete, status will immediately change to STACKED (81H) (Credit Recovery feature).'
   ],
   /* ----------------------------------------------------------------------- */
   [
     DeviceStatus.INITIALIZE,
-    'Bill Validator executes initialization after the RESET command from Controller.',
+    'Bill Validator executes initialization after the RESET command from Controller.'
   ],
   [
     DeviceStatus.IDLING,
-    'Bill Validator waits for an inserting of bill into its bill path.',
+    'Bill Validator waits for an inserting of bill into its bill path.'
   ],
   [
     DeviceStatus.ACCEPTING,
-    'Bill Validator executes scanning of a bill and determines its denomination.',
+    'Bill Validator executes scanning of a bill and determines its denomination.'
   ],
   [
     DeviceStatus.STACKING,
-    'Bill Validator transports a bill from Escrow position to drop cassette and remains in this state until the bill is stacked or jammed.',
+    'Bill Validator transports a bill from Escrow position to drop cassette and remains in this state until the bill is stacked or jammed.'
   ],
   [
     DeviceStatus.RETURNING,
-    'Bill Validator transports a bill from Escrow position back to customer and remains in this state until customer removes the bill or the bill is jammed.',
+    'Bill Validator transports a bill from Escrow position back to customer and remains in this state until customer removes the bill or the bill is jammed.'
   ],
   [
     DeviceStatus.UNIT_DISABLED,
-    'Bill Validator has been disabled by the Controller or just came out of initialization.',
+    'Bill Validator has been disabled by the Controller or just came out of initialization.'
   ],
   [
     DeviceStatus.HOLDING,
-    'The state, in which the bill is held in Escrow position after the HOLD command of the Controller.',
+    'The state, in which the bill is held in Escrow position after the HOLD command of the Controller.'
   ],
   [
     DeviceStatus.DEVICE_BUSY,
-    'Bill Validator cannot answer with a full-length message right now.',
+    'Bill Validator cannot answer with a full-length message right now.'
   ],
   /* ----------------------------------------------------------------------- */
   [DeviceStatus.REJECTING_DUE_TO_INSERTION, 'Insertion error.'],
   [DeviceStatus.REJECTING_DUE_TO_MAGNETIC, 'Dielectric error.'],
   [
     DeviceStatus.REJECTING_DUE_TO_REMAINED_BILL_IN_HEAD,
-    'Previously inserted bill remains in head.',
+    'Previously inserted bill remains in head.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_MULTIPLYING,
-    'Compensation error/multiplying factor error.',
+    'Compensation error/multiplying factor error.'
   ],
   [DeviceStatus.REJECTING_DUE_TO_CONVEYING, 'Bill transport error.'],
   [DeviceStatus.REJECTING_DUE_TO_IDENTIFICATION, 'Identification error.'],
@@ -247,76 +247,76 @@ export const DeviceStatusDescription = new Map<DeviceStatus, string>([
   [DeviceStatus.REJECTING_DUE_TO_OPTIC, 'Optic Sensor error.'],
   [
     DeviceStatus.REJECTING_DUE_TO_INHIBIT,
-    'Return by “inhibit denomination” error.',
+    'Return by “inhibit denomination” error.'
   ],
   [DeviceStatus.REJECTING_DUE_TO_CAPACITY, 'Capacitance error.'],
   [DeviceStatus.REJECTING_DUE_TO_OPERATION, 'Operation error.'],
   [DeviceStatus.REJECTING_DUE_TO_LENGTH, 'Length error.'],
   [
     DeviceStatus.REJECTING_DUE_TO_UNRECOGNISED_BARCODE,
-    'Bill taken was treated as a barcode but no reliable data can be read from it.',
+    'Bill taken was treated as a barcode but no reliable data can be read from it.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_UV,
-    'Banknote UV properties do not meet the predefined criteria.',
+    'Banknote UV properties do not meet the predefined criteria.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_INCORRECT_NUMBER_OF_CHARACTERS_IN_BARCODE,
-    'Barcode data was read (at list partially) but is inconsistent.',
+    'Barcode data was read (at list partially) but is inconsistent.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_UNKNOWN_BARCODE_START_SEQUENCE,
-    'Barcode was not read as no synchronization was established.',
+    'Barcode was not read as no synchronization was established.'
   ],
   [
     DeviceStatus.REJECTING_DUE_TO_UNKNOWN_BARCODE_STOP_SEQUENCE,
-    'Barcode was read but trailing data is corrupt.',
+    'Barcode was read but trailing data is corrupt.'
   ],
   /* ----------------------------------------------------------------------- */
   [DeviceStatus.DROP_CASSETTE_FULL, 'Drop Cassette full condition.'],
   [
     DeviceStatus.DROP_CASSETTE_OUT_OF_POSITION,
-    'The Bill Validator has detected the drop cassette to be open or removed.',
+    'The Bill Validator has detected the drop cassette to be open or removed.'
   ],
   [
     DeviceStatus.VALIDATOR_JAMMED,
-    'A bill(s) has jammed in the acceptance path.',
+    'A bill(s) has jammed in the acceptance path.'
   ],
   [DeviceStatus.DROP_CASSETTE_JAMMED, 'A bill has jammed in drop cassette.'],
   [
     DeviceStatus.CHEATED,
-    'Bill Validator sends this event if the intentions of the user to deceive the Bill Validator are detected.',
+    'Bill Validator sends this event if the intentions of the user to deceive the Bill Validator are detected.'
   ],
   [
     DeviceStatus.PAUSE,
-    'When the user tries to insert a second bill when the previous bill is in the Bill Validator but has not been stacked. Thus Bill Validator stops motion of the second bill until the second bill is removed.',
+    'When the user tries to insert a second bill when the previous bill is in the Bill Validator but has not been stacked. Thus Bill Validator stops motion of the second bill until the second bill is removed.'
   ],
   /* ----------------------------------------------------------------------- */
   [DeviceStatus.STACK_MOTOR_FAILURE, 'Drop Cassette Motor failure.'],
   [
     DeviceStatus.TRANSPORT_MOTOR_SPEED_FAILURE,
-    'Transport Motor Speed failure.',
+    'Transport Motor Speed failure.'
   ],
   [DeviceStatus.TRANSPORT_MOTOR_FAILURE, 'Transport Motor failure.'],
   [DeviceStatus.ALIGNING_MOTOR_FAILURE, 'Aligning Motor failure.'],
   [
     DeviceStatus.INITIAL_CASSETTE_STATUS_FAILURE,
-    'Initial Cassette Status failure.',
+    'Initial Cassette Status failure.'
   ],
   [
     DeviceStatus.OPTIC_CANAL_FAILURE,
-    'One of the optic sensors has failed to provide its response.',
+    'One of the optic sensors has failed to provide its response.'
   ],
   [DeviceStatus.MAGNETIC_CANAL_FAILURE, 'Inductive sensor failed to respond.'],
   [
     DeviceStatus.CAPACITANCE_CANAL_FAILURE,
-    'Capacitance sensor failed to respond.',
+    'Capacitance sensor failed to respond.'
   ],
   /* ----------------------------------------------------------------------- */
   [
     DeviceStatus.ESCROW_POSITION,
-    'If bill type is enabled with escrow the Bill Validator waits command from Controller to stack or to return bill. If during 10 sec command will not be sent bill will be returned.',
+    'If bill type is enabled with escrow the Bill Validator waits command from Controller to stack or to return bill. If during 10 sec command will not be sent bill will be returned.'
   ],
   [DeviceStatus.BILL_STACKED, 'Bill stacked.'],
-  [DeviceStatus.BILL_RETURNED, 'Bill returned.'],
+  [DeviceStatus.BILL_RETURNED, 'Bill returned.']
 ]);

@@ -46,10 +46,10 @@ export class Parser extends Transform {
     this.packet = Buffer.concat([this.packet, chunk]);
 
     if (this.packet.length >= 3 && this.packetLength === 0) {
-      this.packetLength = parseInt(this.packet[2].toString());
+      this.packetLength = parseInt(this.packet[2].toString(), 10);
     }
 
-    if (this.packet.length == this.packetLength) {
+    if (this.packet.length === this.packetLength) {
       this.push(this.packet);
       this.packet = new Buffer(0);
       this.packetLength = 0;

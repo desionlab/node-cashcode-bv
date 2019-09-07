@@ -14,8 +14,8 @@ import { CRC_POLY } from './Const';
  * @param buffer Raw data for calculation.
  */
 export function getCRC16(buffer: Buffer): any {
-  var CRC, i, j;
-  var sizeData = buffer.length;
+  let i: number, j: number, CRC: number;
+  const sizeData: number = buffer.length;
 
   CRC = 0;
 
@@ -26,11 +26,13 @@ export function getCRC16(buffer: Buffer): any {
       if (CRC & 0x0001) {
         CRC >>= 1;
         CRC ^= CRC_POLY;
-      } else CRC >>= 1;
+      } else {
+        CRC >>= 1;
+      }
     }
   }
 
-  var buf = new Buffer(2);
+  const buf = new Buffer(2);
   buf.writeUInt16BE(CRC, 0);
 
   return Array.prototype.reverse.call(buf);
@@ -63,6 +65,7 @@ export class Array8Bit {
    * @param buffer Source data buffer (optional).
    */
   public constructor(length: number, buffer?: Buffer) {
+    // tslint:disable-next-line: prefer-conditional-expression
     if (buffer) {
       this.items = buffer;
     } else {
@@ -79,8 +82,8 @@ export class Array8Bit {
    *
    * @param data Source data array.
    */
-  public static fromArray(data: Array<boolean>): Array8Bit {
-    let instant = new Array8Bit(data.length);
+  public static fromArray(data: boolean[]): Array8Bit {
+    const instant = new Array8Bit(data.length);
 
     data.forEach((element: boolean, index: number) => {
       if (element) {
@@ -145,13 +148,13 @@ export class Array8Bit {
   /**
    *
    */
-  public toArray(): Array<boolean> {
+  public toArray(): boolean[] {
     const max: number = 8;
-    let data: Array<boolean> = [];
+    const data: boolean[] = [];
 
-    this.items.forEach((number, container) => {
+    this.items.forEach((num, container) => {
       for (let x = 0; x < max; x++) {
-        data.push((number & (1 << x)) > 0);
+        data.push((num & (1 << x)) > 0);
       }
     });
 

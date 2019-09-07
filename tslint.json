@@ -1,6 +1,9 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended"],
+  "extends": [
+    "tslint:latest",
+    "tslint-config-prettier"
+  ],
   "jsRules": {
     "no-unused-expression": true
   },
@@ -12,7 +15,15 @@
     "member-ordering": [false],
     "interface-name": [false],
     "arrow-parens": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "one-variable-per-declaration": false,
+    "no-bitwise": false,
+    "variable-name": false,
+    "trailing-comma": false,
+    "prefer-object-spread": false,
+    "prettier": true
   },
-  "rulesDirectory": []
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ]
 }

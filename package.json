@@ -41,10 +41,12 @@
     "@types/node": "^12.7.4",
     "@types/serialport": "^7.0.4",
     "chai": "^4.2.0",
-    "prettier": "^1.18.2",
     "mocha": "^6.2.0",
+    "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
     "tslint": "^5.19.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "^0.15.0",
     "typescript": "^3.6.2"
   },

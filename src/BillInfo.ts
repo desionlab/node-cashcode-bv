@@ -45,7 +45,7 @@ export class BillInfo {
       this.code = data.toString('ascii', 1, 4).trim();
 
       /* Clear not used item. */
-      if (this.code == '\u0000\u0000\u0000') {
+      if (this.code === '\u0000\u0000\u0000') {
         this.code = '';
         this.security = false;
         this.enabled = false;

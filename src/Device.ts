@@ -19,7 +19,7 @@ import { BillInfo } from './BillInfo';
 import {
   DeviceStatus,
   DeviceStatusMessage,
-  DeviceStatusDescription,
+  DeviceStatusDescription
 } from './Const';
 
 /**
@@ -29,17 +29,17 @@ export interface BillStatus {
   /**
    * The list of flags allowed to accept bills.
    */
-  enabled: Array<boolean>;
+  enabled: boolean[];
 
   /**
    * List of security flags for bills.
    */
-  security: Array<boolean>;
+  security: boolean[];
 
   /**
    * List of escrow flags for bills.
    */
-  escrow?: Array<boolean>;
+  escrow?: boolean[];
 }
 
 /**
@@ -66,7 +66,7 @@ export class Device extends EventEmitter {
     dataBits: 8,
     stopBits: 1,
     parity: 'none',
-    autoOpen: false,
+    autoOpen: false
   };
 
   /**
@@ -122,12 +122,12 @@ export class Device extends EventEmitter {
   /**
    * List of supported bills.
    */
-  protected _billTable: Array<BillInfo> = [];
+  protected _billTable: BillInfo[] = [];
 
   /**
    * Getter for a list of supported bills.
    */
-  get billTable(): Array<BillInfo> {
+  get billTable(): BillInfo[] {
     return this._billTable;
   }
 
@@ -162,7 +162,7 @@ export class Device extends EventEmitter {
       true,
       true,
       true,
-      true,
+      true
     ],
 
     /**
@@ -192,7 +192,7 @@ export class Device extends EventEmitter {
       false,
       false,
       false,
-      false,
+      false
     ],
 
     /**
@@ -222,8 +222,8 @@ export class Device extends EventEmitter {
       true,
       true,
       true,
-      true,
-    ],
+      true
+    ]
   };
 
   /**
@@ -250,7 +250,7 @@ export class Device extends EventEmitter {
   /**
    * List of pending commands.
    */
-  protected queue: Array<Task> = [];
+  protected queue: Task[] = [];
 
   /**
    * Operating timer interval.
@@ -276,7 +276,7 @@ export class Device extends EventEmitter {
     port: string,
     options?: SerialPort.OpenOptions,
     logger?: any,
-    debugPackets?: boolean,
+    debugPackets?: boolean
   ) {
     super();
 
@@ -305,28 +305,36 @@ export class Device extends EventEmitter {
    *
    */
   public open(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {});
+    return new Promise(async (resolve, reject) => {
+      /* Todo */
+    });
   }
 
   /**
    *
    */
   public close(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {});
+    return new Promise(async (resolve, reject) => {
+      /* Todo */
+    });
   }
 
   /**
    *
    */
   public connect(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {});
+    return new Promise(async (resolve, reject) => {
+      /* Todo */
+    });
   }
 
   /**
    *
    */
   public disconnect(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {});
+    return new Promise(async (resolve, reject) => {
+      /* Todo */
+    });
   }
 
   /* ----------------------------------------------------------------------- */
@@ -342,7 +350,7 @@ export class Device extends EventEmitter {
           new Commands.SetSecurity(),
           Array8Bit.fromArray(this.billStatus.security)
             .toBuffer()
-            .reverse(),
+            .reverse()
         );
 
         /*  */
@@ -354,8 +362,8 @@ export class Device extends EventEmitter {
               .reverse(),
             Array8Bit.fromArray(this.billStatus.escrow)
               .toBuffer()
-              .reverse(),
-          ]),
+              .reverse()
+          ])
         );
 
         resolve(true);
@@ -426,7 +434,7 @@ export class Device extends EventEmitter {
           0x00,
           0x00,
           0x00,
-          0x00,
+          0x00
         ]);
 
         resolve(true);
@@ -448,10 +456,10 @@ export class Device extends EventEmitter {
   public execute(
     command: Command,
     params: any = [],
-    timeout: number = 1000,
+    timeout: number = 1000
   ): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      let task = new Task(
+      const task = new Task(
         command.request(params),
         (error, data) => {
           if (error) {
@@ -460,7 +468,7 @@ export class Device extends EventEmitter {
 
           resolve(command.response(data));
         },
-        timeout,
+        timeout
       );
 
       this.queue.push(task);
@@ -475,12 +483,12 @@ export class Device extends EventEmitter {
    */
   public asyncOnce(
     event: string | symbol,
-    timeout: number = 1000,
+    timeout: number = 1000
   ): Promise<any> {
     return new Promise(async (resolve, reject) => {
       let timeoutCounter: number = 0;
 
-      let timeoutHandler = () => {
+      const timeoutHandler = () => {
         setImmediate(() => {
           timeoutCounter += this.timerMs;
 
@@ -492,7 +500,7 @@ export class Device extends EventEmitter {
         });
       };
 
-      let handler = () => {
+      const handler = () => {
         if (timeout) {
           this.removeListener('tick', timeoutHandler);
         }
@@ -540,7 +548,7 @@ export class Device extends EventEmitter {
   protected onTick(): void {
     /* Check busy flag. */
     if (!this.busy) {
-      let task = this.queue.shift();
+      const task = this.queue.shift();
 
       /* Check next task. */
       if (typeof task !== 'undefined' && task instanceof Task) {
@@ -550,7 +558,7 @@ export class Device extends EventEmitter {
         let timeoutCounter: number = 0;
 
         /* Timeout timer handler. */
-        let timeoutHandler = () => {
+        const timeoutHandler = () => {
           setImmediate(() => {
             timeoutCounter += this.timerMs;
 
@@ -563,7 +571,7 @@ export class Device extends EventEmitter {
         };
 
         /* Receive packet handler. */
-        let handler = async (response: Buffer) => {
+        const handler = async (response: Buffer) => {
           this.removeListener('tick', timeoutHandler);
 
           /* Unbind event. */
@@ -575,9 +583,9 @@ export class Device extends EventEmitter {
           }
 
           /* Check CRC */
-          let ln = response.length;
-          let check = response.slice(ln - 2, ln);
-          let slice = response.slice(0, ln - 2);
+          const ln = response.length;
+          const check = response.slice(ln - 2, ln);
+          const slice = response.slice(0, ln - 2);
 
           /* Check response CRC. */
           if (check.toString() !== getCRC16(slice).toString()) {
@@ -592,12 +600,12 @@ export class Device extends EventEmitter {
           }
 
           /* Get data from packet. */
-          let data = response.slice(3, ln - 2);
+          const data = response.slice(3, ln - 2);
 
           /* Check response type. */
-          if (data.length == 1 && data[0] == 0x00) {
+          if (data.length === 1 && data[0] === 0x00) {
             /* Response receive as ACK. */
-          } else if (data.length == 1 && data[0] == 0xff) {
+          } else if (data.length === 1 && data[0] === 0xff) {
             /* Response receive as NAK. */
 
             /* Update flag. */
@@ -644,8 +652,8 @@ export class Device extends EventEmitter {
 
               this.onStatus(data);
             },
-            1000,
-          ),
+            1000
+          )
         );
       }
     }
@@ -662,19 +670,22 @@ export class Device extends EventEmitter {
 
     /* Determine the new status. */
     if (status.length >= 2) {
-      switch (parseInt(status[0].toString(10))) {
+      switch (parseInt(status[0].toString(10), 10)) {
         case DeviceStatus.DEVICE_BUSY:
         case DeviceStatus.ESCROW_POSITION:
         case DeviceStatus.BILL_STACKED:
         case DeviceStatus.BILL_RETURNED:
-          newStatus = parseInt(status[0].toString(10));
+          newStatus = parseInt(status[0].toString(10), 10);
           break;
         default:
-          newStatus = parseInt(status[0].toString(10) + status[1].toString(10));
+          newStatus = parseInt(
+            status[0].toString(10) + status[1].toString(10),
+            10
+          );
           break;
       }
     } else {
-      newStatus = parseInt(status[0].toString(10));
+      newStatus = parseInt(status[0].toString(10), 10);
     }
 
     /* Check new status. */
@@ -688,27 +699,30 @@ export class Device extends EventEmitter {
           'status',
           this._status,
           DeviceStatusMessage.get(this._status),
-          DeviceStatusDescription.get(this._status),
+          DeviceStatusDescription.get(this._status)
         );
 
         /* Event call by type and purpose. */
         switch (newStatus) {
           case DeviceStatus.DEVICE_BUSY:
-            this.emit(String(this._status), parseInt(status[1].toString(10)));
+            this.emit(
+              String(this._status),
+              parseInt(status[1].toString(10), 10)
+            );
             break;
           case DeviceStatus.ESCROW_POSITION:
           case DeviceStatus.BILL_STACKED:
           case DeviceStatus.BILL_RETURNED:
             this.emit(
               String(this._status),
-              this.billTable[parseInt(status[1].toString(10))],
+              this.billTable[parseInt(status[1].toString(10), 10)]
             );
             break;
           default:
             this.emit(
               String(this._status),
               DeviceStatusMessage.get(this._status),
-              DeviceStatusDescription.get(this._status),
+              DeviceStatusDescription.get(this._status)
             );
             break;
         }
