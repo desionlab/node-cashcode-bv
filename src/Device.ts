@@ -288,6 +288,27 @@ export class Device extends EventEmitter {
       this.options = Object.assign(this.options, options);
     }
 
+    /* Create serial port instant. */
+    this.serial = new SerialPort(this.port, this.options);
+
+    /* On serial open event. */
+    this.serial.on('open', () => {
+      this.onSerialPortOpen();
+    });
+
+    /* On serial error event. */
+    this.serial.on('error', error => {
+      this.onSerialPortError(error);
+    });
+
+    /* On serial close event. */
+    this.serial.on('close', () => {
+      this.onSerialPortClose();
+    });
+
+    /* Set CCNet packet parser. */
+    this.parser = this.serial.pipe(new Parser());
+
     /* Set logger instant. */
     if (logger) {
       this.logger = logger;
@@ -297,6 +318,9 @@ export class Device extends EventEmitter {
     if (debugPackets) {
       this.debugPackets = debugPackets;
     }
+
+    /* Bind main timer handler. */
+    this.on('tick', this.onTick);
   }
 
   /* ----------------------------------------------------------------------- */
@@ -304,27 +328,48 @@ export class Device extends EventEmitter {
   /**
    *
    */
-  public open(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      /* Todo */
-    });
-  }
-
-  /**
-   *
-   */
-  public close(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      /* Todo */
-    });
-  }
-
-  /**
-   *
-   */
   public connect(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
-      /* Todo */
+      try {
+        /* Check and open port. */
+        if (!this.serial.isOpen) {
+          // tslint:disable-next-line: no-shadowed-variable
+          await new Promise(async (resolve, reject) => {
+            this.serial.open(error => {
+              if (error) {
+                reject(error);
+              }
+
+              resolve();
+            });
+          });
+        }
+
+        /* Get current status. */
+        if (!this.status) {
+          try {
+            this.onStatus(await this.execute(new Commands.Poll()));
+          } catch (error) {
+            await this.execute(new Commands.Reset());
+          }
+        }
+
+        /* Get device info. */
+        this._info = new DeviceInfo(
+          await this.execute(new Commands.Identification()),
+          await this.execute(new Commands.GetCRC32OfTheCode())
+        );
+
+        const rawBt = await this.execute(new Commands.GetBillTable());
+        for (let i = 0; i < 24; i++) {
+          const rawBill = rawBt.slice(i * 5, i * 5 + 5);
+          this._billTable.push(new BillInfo(rawBill));
+        }
+
+        resolve(true);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
@@ -333,7 +378,25 @@ export class Device extends EventEmitter {
    */
   public disconnect(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
-      /* Todo */
+      try {
+        /* Check and open port. */
+        if (this.serial.isOpen) {
+          // tslint:disable-next-line: no-shadowed-variable
+          await new Promise(async (resolve, reject) => {
+            this.serial.close(error => {
+              if (error) {
+                reject(error);
+              }
+
+              resolve();
+            });
+          });
+        }
+
+        resolve(true);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
@@ -523,9 +586,7 @@ export class Device extends EventEmitter {
    */
   protected startTimer(): void {
     /* Clear operating timer. */
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-    }
+    this.stopTimer();
 
     /* Start operating timer. */
     this.timerInterval = setInterval(() => {
@@ -537,7 +598,9 @@ export class Device extends EventEmitter {
    * Stop operating timer.
    */
   protected stopTimer(): void {
-    clearInterval(this.timerInterval);
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
   }
 
   /* ----------------------------------------------------------------------- */
@@ -590,7 +653,14 @@ export class Device extends EventEmitter {
           /* Check response CRC. */
           if (check.toString() !== getCRC16(slice).toString()) {
             /* Send NAK. */
-            await this.serial.write(new Commands.Nak().request());
+            this.serial.write(
+              new Commands.Nak().request(),
+              (_error: Error, _written: number) => {
+                if (_error) {
+                  throw _error;
+                }
+              }
+            );
 
             /* Update flag. */
             this.busy = false;
@@ -615,7 +685,14 @@ export class Device extends EventEmitter {
             task.done(new Exception(11, 'Wrong request data hash.'), null);
           } else {
             /* Send ACK. */
-            await this.serial.write(new Commands.Ack().request());
+            this.serial.write(
+              new Commands.Ack().request(),
+              (_error: Error, _written: number) => {
+                if (_error) {
+                  throw _error;
+                }
+              }
+            );
           }
 
           /* Update flag. */
@@ -634,7 +711,11 @@ export class Device extends EventEmitter {
         }
 
         /* Send packet. */
-        this.serial.write(task.data);
+        this.serial.write(task.data, (_error: Error, _written: number) => {
+          if (_error) {
+            throw _error;
+          }
+        });
 
         /* Bind timeout handler. */
         if (task.timeout) {
@@ -748,6 +829,7 @@ export class Device extends EventEmitter {
   protected onSerialPortError(error: Error): void {
     /* Stop operating timer. */
     this.stopTimer();
+    throw error;
   }
 
   /**
@@ -757,6 +839,4 @@ export class Device extends EventEmitter {
     /* Stop operating timer. */
     this.stopTimer();
   }
-
-  /* ----------------------------------------------------------------------- */
 }

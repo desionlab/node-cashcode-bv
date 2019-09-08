@@ -1,6 +1,6 @@
 {
   "name": "cashcode-bv",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha-1",
   "description": "Library for working with \"CashCode\" bill validator devices from Node.js app.",
   "author": "Desionlab <fenixphp@gmail.com>",
   "keywords": [

@@ -1,18 +1,16 @@
 /**
  * Utils.spec.ts
- * 
+ *
  * @author    Desionlab <fenixphp@gmail.com>
- * @copyright 2018 Desionlab
+ * @copyright 2017 - 2019 Desionlab
  * @license   MIT
  */
 
 import { expect } from 'chai';
 import * as CashCode from './../src';
 
-describe("CashCode BV", () => {
-
-  describe('Utils', () => {});
-
+describe('CashCode BV', () => {
+  describe('Utils', () => {
+    /* Todo */
+  });
 });
-
-/* End of file Utils.spec.ts */

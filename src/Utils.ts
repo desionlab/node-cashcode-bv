@@ -32,7 +32,7 @@ export function getCRC16(buffer: Buffer): any {
     }
   }
 
-  const buf = new Buffer(2);
+  const buf = Buffer.alloc(2);
   buf.writeUInt16BE(CRC, 0);
 
   return Array.prototype.reverse.call(buf);

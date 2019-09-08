@@ -37,7 +37,7 @@ export class Command {
    * @param params Parameters of the command being passed.
    */
   public request(params: any | null = []): Buffer {
-    return this.assemble(new Buffer(params));
+    return this.assemble(Buffer.from(params));
   }
 
   /**
@@ -54,15 +54,15 @@ export class Command {
    *
    * @param params
    */
-  protected assemble(params: Buffer = new Buffer(0)): Buffer {
+  protected assemble(params: Buffer = Buffer.alloc(0)): Buffer {
     /* Assemble main packet data. */
     let cmd = Buffer.concat([
       /* Header. */
-      new Buffer([CCNet.SYNC, CCNet.ADR_BILL_VALIDATOR]),
+      Buffer.from([CCNet.SYNC, CCNet.ADR_BILL_VALIDATOR]),
       /* Length. */
-      new Buffer([params.length + 6]),
+      Buffer.from([params.length + 6]),
       /* Command. */
-      new Buffer([this.cmd])
+      Buffer.from([this.cmd])
     ]);
 
     /* Assemble params packet data. */

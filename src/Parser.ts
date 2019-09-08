@@ -19,7 +19,7 @@ export class Parser extends Transform {
   /**
    * Packet container.
    */
-  protected packet: Buffer = new Buffer(0);
+  protected packet: Buffer = Buffer.alloc(0);
 
   /**
    * Packet full length.
@@ -51,7 +51,7 @@ export class Parser extends Transform {
 
     if (this.packet.length === this.packetLength) {
       this.push(this.packet);
-      this.packet = new Buffer(0);
+      this.packet = Buffer.alloc(0);
       this.packetLength = 0;
     }
 

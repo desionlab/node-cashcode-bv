@@ -1,18 +1,16 @@
 /**
  * Device.spec.ts
- * 
+ *
  * @author    Desionlab <fenixphp@gmail.com>
- * @copyright 2018 Desionlab
+ * @copyright 2017 - 2019 Desionlab
  * @license   MIT
  */
 
 import { expect } from 'chai';
 import * as CashCode from './../src';
 
-describe("CashCode BV", () => {
-
-  describe('Device', () => {});
-
+describe('CashCode BV', () => {
+  describe('Device', () => {
+    /* Todo */
+  });
 });
-
-/* End of file Device.spec.ts */
